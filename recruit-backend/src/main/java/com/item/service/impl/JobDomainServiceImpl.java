@@ -905,22 +905,8 @@ public class JobDomainServiceImpl implements JobDomainService {
             throw BusinessException.of(JobResponseCode.INVALID_STATUS_TRANSITION);
         }
 
-        //Only MASTER account can publish (ACTIVE)
-        if (targetStatus == JobStatus.ACTIVE && currentStatus != JobStatus.ON_HOLD) {
-            IamUserContextDTO currentUserNeedLogin = UserContextUtil.getCurrentUserNeedLogin();
-            UserIdentifyTypeEnum userIdentify = UserIdentifyTypeEnum.getByCode(currentUserNeedLogin.getUserIdentifyCode());
-
-            if (userIdentify != UserIdentifyTypeEnum.MASTER_RECRUIT) {
-                log.warn("Non-master user attempted to publish job. jobId={} companyCode={} userId={} userIdentify={}",
-                        jobId,
-                        jobEntity.getCompanyCode(),
-                        currentUserNeedLogin.getId(),
-                        userIdentify != null ? userIdentify.name() : null);
-
-                // Reuse the auth error semantics used by AuthInterceptor
-                throw BusinessException.of(AuthResponseCode.ONLY_MASTER_CAN_PUBLISH);
-            }
-        }
+        // 3. Validate user permissions for status transition
+        validatePublishPermission(currentStatus, targetStatus, jobId, jobEntity);
 
         JobApprovalAction action = switch (targetStatus) {
             case PENDING_MODIFICATION -> JobApprovalAction.RESUBMIT;
@@ -1741,5 +1727,37 @@ public class JobDomainServiceImpl implements JobDomainService {
             config.setSubStageOrder(Optional.ofNullable(scoreRuleConfig).map(JobIntelligenceScoreRuleConfigProperties.ScoreRuleConfig::getSubStageOrder).orElse(Integer.MAX_VALUE));
         });
         return scoreRules.stream().sorted(Comparator.comparing(IntelligenceScoreRuleDTO::getStageOrder).thenComparing(IntelligenceScoreRuleDTO::getSubStageOrder)).collect(Collectors.toList());
+    }
+
+    /**
+     * Validates that the current user has permission to publish a job.
+     * Only MASTER_RECRUIT users can publish jobs (transition to ACTIVE status),
+     * except when resuming from ON_HOLD status.
+     *
+     * @param currentStatus the current job status
+     * @param targetStatus the target job status
+     * @param jobId the job ID for logging purposes
+     * @param jobEntity the job entity for logging purposes
+     * @throws BusinessException if user lacks permission to publish
+     */
+    private void validatePublishPermission(JobStatus currentStatus, JobStatus targetStatus, Long jobId, JobEntity jobEntity) {
+        // Only validate when transitioning to ACTIVE status (publishing)
+        // Skip validation when resuming from ON_HOLD (already published job)
+        if (targetStatus != JobStatus.ACTIVE || currentStatus == JobStatus.ON_HOLD) {
+            return;
+        }
+
+        IamUserContextDTO currentUser = UserContextUtil.getCurrentUserNeedLogin();
+        UserIdentifyTypeEnum userIdentify = UserIdentifyTypeEnum.getByCode(currentUser.getUserIdentifyCode());
+
+        if (userIdentify != UserIdentifyTypeEnum.MASTER_RECRUIT) {
+            log.warn("Non-master user attempted to publish job. jobId={}, companyCode={}, userId={}, userIdentify={}",
+                    jobId,
+                    jobEntity.getCompanyCode(),
+                    currentUser.getId(),
+                    userIdentify != null ? userIdentify.name() : "UNKNOWN");
+
+            throw BusinessException.of(AuthResponseCode.ONLY_MASTER_CAN_PUBLISH);
+        }
     }
 }
