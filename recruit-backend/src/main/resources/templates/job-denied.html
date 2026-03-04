@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Job Denied</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #f8d7da; padding: 20px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb; }
+        .content { padding: 20px; }
+        .denied { color: #721c24; }
+        .comment-box { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #dc3545; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 class="denied">Job Denied</h2>
+        </div>
+        
+        <div class="content">
+            <p>We regret to inform you that your job posting has been denied:</p>
+            
+            <h3>Job Details:</h3>
+            <ul>
+                <li><strong>Job Title:</strong> <span th:text="${jobTitle}">Job Title</span></li>
+                <li><strong>Job ID:</strong> <span th:text="${jobId}">Job ID</span></li>
+                <li><strong>Company Code:</strong> <span th:text="${companyCode}">Company Code</span></li>
+            </ul>
+            
+            <p class="denied"><strong>Status: DENIED</strong></p>
+            
+            <div class="comment-box" th:if="${comment != null and comment != ''}">
+                <h4>Reason for Denial:</h4>
+                <p th:text="${comment}">Admin comment</p>
+            </div>
+            
+            <p>Please review the feedback provided and make the necessary changes before resubmitting your job posting.</p>
+            
+            <p>If you have any questions about the denial or need assistance with revisions, please contact your administrator.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from the Job Approval System.</p>
+            <p>Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

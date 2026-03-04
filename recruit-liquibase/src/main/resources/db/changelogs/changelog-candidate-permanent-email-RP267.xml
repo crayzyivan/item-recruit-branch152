@@ -1,0 +1,71 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- RP-267: C端用户新邮箱字段兼容 -->
+    <!-- 在 r_candidate 表中新增 candidate_permanent_email 字段来存储用户不可变的邮箱地址 -->
+
+    <!-- 步骤1: 添加新字段 candidate_permanent_email (初始为可空) -->
+    <changeSet id="r_candidate-add-permanent-email-20251011" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate"/>
+            <not>
+                <columnExists tableName="r_candidate" columnName="candidate_permanent_email"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_candidate">
+            <column name="candidate_permanent_email" type="varchar(128)" remarks="用户不能改变的email">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- 步骤2: 数据迁移 - 将现有的 candidate_email 值复制到新字段 -->
+    <changeSet id="r_candidate-migrate-permanent-email-data-20251011" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="candidate_permanent_email"/>
+            <columnExists tableName="r_candidate" columnName="candidate_email"/>
+        </preConditions>
+        <sql>
+            UPDATE r_candidate
+            SET candidate_permanent_email = candidate_email 
+            WHERE candidate_permanent_email IS NULL;
+        </sql>
+    </changeSet>
+
+    <!-- 步骤3: 修改字段为 NOT NULL 约束并保持注释 -->
+    <changeSet id="r_candidate-set-permanent-email-not-null-20251011" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="candidate_permanent_email"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE r_candidate 
+            MODIFY COLUMN candidate_permanent_email varchar(128) NOT NULL COMMENT '用户不能改变的email';
+        </sql>
+    </changeSet>
+
+    <!-- 步骤4: 创建索引以提高查询性能 -->
+    <changeSet id="r_candidate-index-permanent-email-20251011" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="candidate_permanent_email"/>
+            <not>
+                <indexExists tableName="r_candidate" indexName="idx_candidate_permanent_email"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="r_candidate" indexName="idx_candidate_permanent_email">
+            <column name="candidate_permanent_email"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: ivan-local
+ 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_DISCOVERY_ADDR:nacos-dev.item.pub:8848}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE:item}
+        username: ${NACOS_DISCOVERY_USERNAME:item}
+        password: ${NACOS_DISCOVERY_PASSWORD:YjZzJWXpSPTiXkGB}
+        group: DEFAULT_GROUP
+        enabled: true
+        fail-fast: false
+      #        register-enabled: false
+      config:
+        server-addr: ${NACOS_CONFIG_ADDR:nacos-dev.item.pub:8848}
+        namespace: ${NACOS_CONFIG_NAMESPACE:item}
+        username: ${NACOS_CONFIG_USERNAME:item}
+        password: ${NACOS_CONFIG_PASSWORD:YjZzJWXpSPTiXkGB}
+        file-extension: yaml
+        group: ivan-local
+        enabled: true
+        refresh-enabled: true

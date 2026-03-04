@@ -1,0 +1,7 @@
+【面试跟进提醒】
+您好！{candidateName}{genderTitle}在投递{companyName}公司{jobTitle}岗位后，因您未能及时接听关于该岗位面试的来电，特此提醒：烦请您在方便时尽快回拨电话：{phoneNumber}，以便进一步推进面试进程。
+期待您的回电，感谢！
+{companyName}公司
+
+回复 “STOP” 即可取消短信服务。
+回复 “HELP” 可获取短信相关帮助。

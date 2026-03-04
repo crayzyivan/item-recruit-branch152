@@ -1,0 +1,4 @@
+Hello, [[${username}]]!
+Welcome to our service.
+Your verification code is: [[${code}]]
+If this is not your operation, please ignore this email.

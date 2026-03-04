@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/recruit?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    username: root
+    password: mYSqlP@ssw0rd01
+  liquibase:
+    #change-log: classpath:db/db.changelog-master.xml
+    # 覆盖本地ddl dml
+    drop-first: false
+    enabled: true
+    database-change-log-table: DATABASECHANGELOG
+    database-change-log-lock-table: DATABASECHANGELOGLOCK

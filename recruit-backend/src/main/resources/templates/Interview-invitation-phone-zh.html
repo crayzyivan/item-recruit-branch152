@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试邀请 - <span th:text="${companyName}"></span></title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        .content {
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .highlight {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-left: 4px solid #3498db;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        .test-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        .test-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .signature {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="company-name" th:text="${companyName}"></div>
+        </div>
+        
+        <div class="greeting">
+            尊敬的 <span th:text="${candidateName}"></span>，
+        </div>
+        
+        <div class="content">
+            <p>感谢您申请<strong><span th:text="${companyName}"></span></strong>的<strong><span th:text="${jobTitle}"></span></strong>职位。经过仔细评估您的申请，我们很高兴邀请您参加笔试。</p>
+            
+            <p>此笔试旨在帮助我们以灵活的方式更深入地了解您的技能、经验以及对该职位的适配性。以下是您需要了解的信息：</p>
+        </div>
+        
+        <div class="highlight">
+            <div class="info-item">
+                <span class="info-label">友好提示：</span>请您在收到邮件后尽快完成笔试以免耽误后续招聘流程。
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">平台：</span>笔试将通过综合评估系统进行。准备好后，请点击下方按钮开始。
+            </div>
+            
+            <div class="button-container">
+                <a th:href="${writtenTestUrl}" class="test-button" target="_blank">
+                    📝 开始笔试
+                </a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <p>提交笔试后，我们的团队将审核您的答案。</p>
+            
+            <p>我们非常感谢您对<strong><span th:text="${companyName}"></span></strong>的关注，期待您的回复！</p>
+        </div>
+        
+        <div class="footer">
+            <p>此致</p>
+            <p>敬礼</p>
+            <div class="signature" th:text="${companyName}"></div>
+        </div>
+    </div>
+</body>
+</html>

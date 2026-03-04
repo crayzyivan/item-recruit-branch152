@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>职位已成功发布</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #e8f4ff; padding: 20px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c6e0ff; }
+        .content { padding: 20px; }
+        .notice { color: #0b5394; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 class="notice">职位已成功发布</h2>
+        </div>
+
+        <div class="content">
+            <p>您的职位已发布，现已在平台上展示。</p>
+
+            <h3>职位详情：</h3>
+            <ul>
+                <li><strong>职位名称：</strong> <span th:text="${jobTitle}">Job Title</span></li>
+                <li><strong>职位 ID：</strong> <span th:text="${jobId}">Job ID</span></li>
+                <li><strong>公司编码：</strong> <span th:text="${companyCode}">Company Code</span></li>
+            </ul>
+
+            <p class="notice"><strong>状态：已发布</strong></p>
+
+            <p>该职位已对求职者可见。您现在可以在雇主后台查看候选人申请并发送面试邀请。</p>
+
+            <p>如需修改职位或获取帮助，请联系您的管理员。</p>
+        </div>
+
+        <div class="footer">
+            <p>本邮件由职位审核系统自动发送。</p>
+            <p>请勿直接回复本邮件。</p>
+        </div>
+    </div>
+</body>
+</html>
+

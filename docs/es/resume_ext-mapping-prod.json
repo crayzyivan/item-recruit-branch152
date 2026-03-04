@@ -1,0 +1,227 @@
+{
+  "aliases": {
+    "recruit_resume_ext_alias": {}
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "candidateName": {
+        "type": "text",
+        "analyzer": "standard",
+        "search_analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          }
+        }
+      },
+      "middleName": {
+        "type": "keyword",
+        "null_value": "null"
+      },
+      "candidateEmail": {
+        "type": "keyword",
+        "index": true
+      },
+      "resumeUrl": {
+        "type": "keyword",
+        "index": false
+      },
+      "gender": {
+        "type": "keyword",
+        "index": true
+      },
+      "dateOfBirth": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd HH:mm||yyyyMMdd||epoch_millis"
+      },
+      "streetAddress": {
+        "type": "text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "apartmentOrSuite": {
+        "type": "text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "countryId": {
+        "type": "long"
+      },
+      "countryName": {
+        "type": "keyword",
+        "index": true
+      },
+      "stateId": {
+        "type": "long",
+        "index": true
+      },
+      "stateName": {
+        "type": "keyword",
+        "index": true
+      },
+      "cityId": {
+        "type": "long",
+        "index": true
+      },
+      "cityName": {
+        "type": "keyword",
+        "index": true
+      },
+      "postalCode": {
+        "type": "keyword",
+        "index": true
+      },
+      "educationId": {
+        "type": "long"
+      },
+      "employmentId": {
+        "type": "long"
+      },
+      "phoneNumber": {
+        "type": "keyword",
+        "index": true
+      },
+      "currencyTypeId": {
+        "type": "long"
+      },
+      "expectedSalary": {
+        "type": "double"
+      },
+      "salaryTypeId": {
+        "type": "long"
+      },
+      "availableFrom": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd HH:mm||yyyyMMdd||epoch_millis"
+      },
+      "createTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd'T'HH:mm:ss||epoch_millis"
+      },
+      "updateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd'T'HH:mm:ss||epoch_millis"
+      },
+      "deleted": {
+        "type": "integer",
+        "index": true
+      },
+      "candidateEducations": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "candidateId": {
+            "type": "long"
+          },
+          "institutionTypeId": {
+            "type": "long"
+          },
+          "institutionName": {
+            "type": "text",
+            "analyzer":"standard",
+            "search_analyzer":"standard"
+          },
+          "graduated": {
+            "type": "integer"
+          },
+          "startDate": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+          },
+          "endDate": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+          },
+          "degreeId": {
+            "type": "long"
+          },
+          "major": {
+            "type": "keyword"
+          },
+          "minor": {
+            "type": "keyword"
+          }
+        }
+      },
+      "employmentHistories": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "candidateId": {
+            "type": "long"
+          },
+          "companyName": {
+            "type": "text",
+            "analyzer":"standard",
+            "search_analyzer":"standard"
+          },
+          "currentEmployer": {
+            "type": "keyword"
+          },
+          "jobTitle": {
+            "type": "text",
+            "analyzer":"standard",
+            "search_analyzer":"standard"
+          },
+          "startDate": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+          },
+          "endDate": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+          },
+          "keyResponsibilities": {
+            "type": "text",
+            "analyzer":"standard",
+            "search_analyzer":"standard"
+          }
+        }
+      },
+      "resumeContent": {
+        "type": "text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 2,
+      "refresh_interval": "1s",
+      "max_result_window": 10000,
+      "analysis": {
+        "analyzer": {
+          "ngram_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "lowercase",
+              "ngram_filter"
+            ]
+          }
+        },
+        "filter": {
+          "ngram_filter": {
+            "type": "ngram",
+            "min_gram": 2,
+            "max_gram": 3
+          }
+        }
+      }
+    }
+  }
+}

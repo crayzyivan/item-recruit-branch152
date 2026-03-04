@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Job Rejected - Changes Required</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #fff3cd; padding: 20px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #ffeaa7; }
+        .content { padding: 20px; }
+        .warning { color: #856404; }
+        .comment-box { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #ffc107; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 class="warning">Job Rejected - Changes Required</h2>
+        </div>
+        
+        <div class="content">
+            <p>Your job posting requires some changes before it can be approved:</p>
+            
+            <h3>Job Details:</h3>
+            <ul>
+                <li><strong>Job Title:</strong> <span th:text="${jobTitle}">Job Title</span></li>
+                <li><strong>Job ID:</strong> <span th:text="${jobId}">Job ID</span></li>
+                <li><strong>Company Code:</strong> <span th:text="${companyCode}">Company Code</span></li>
+            </ul>
+            
+            <p class="warning"><strong>Status: REJECTED - CHANGES REQUIRED</strong></p>
+            
+            <div class="comment-box" th:if="${comment != null and comment != ''}">
+                <h4>Requested Changes:</h4>
+                <p th:text="${comment}">Admin comment</p>
+            </div>
+            
+            <p>Please review the feedback provided and make the necessary changes to your job posting. Once you've made the requested modifications, you can resubmit the job for approval.</p>
+            
+            <p>After making the changes, the job will be reviewed again by the administrator.</p>
+            
+            <p>If you have any questions about the requested changes or need assistance, please contact your administrator.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from the Job Approval System.</p>
+            <p>Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

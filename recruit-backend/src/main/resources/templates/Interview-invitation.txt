@@ -1,0 +1,22 @@
+Dear [[${candidateName}]],
+
+Thank you for applying for the [[${jobTitle}]] position at [[${companyName}]]. After carefully evaluating your application, we’re excited to invite you to complete an AI-powered interview as the next step in our recruitment process.
+
+This AI interview is designed to help us learn more about your skills, experiences, and fit for the role in a flexible way. Here’s what you need to know:
+
+•Access Period: You can complete the interview at any time within [[${interviewTimeLimit}]] days after receiving the email. Once you start, you’ll have [[${time}]] minutes to finish.
+
+•Platform: The interview will be conducted via AI . Please click this link to begin when you’re ready:
+[[${interviewUrl}]]
+
+•Format: You’ll receive a series of questions (both behavioral and role-related) displayed on the screen or read aloud by the AI. You’ll record video responses.
+
+•Preparation Tips: Find a quiet space with good lighting, ensure your device (computer or smartphone) has a working camera and microphone, and test your internet connection in advance. You may also want to review your resume and think about your relevant experiences.
+
+Once you submit your AI interview, our team will review your responses.
+
+We appreciate your interest in [[${companyName}]] and look forward to seeing your responses!
+
+Best regards,
+
+[[${companyName}]]

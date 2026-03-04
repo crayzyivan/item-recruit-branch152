@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="r-job-ayrshare-status-add-20250130" author="lh">
+        <preConditions>
+            <not>
+                <columnExists tableName="r_job" columnName="ayrshare_status"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE `r_job` ADD COLUMN `ayrshare_status` int NOT NULL DEFAULT 0 COMMENT 'Ayrshare分享状态：0-不需要分享，1-分享中，2-分享成功，3-部分成功，-1-分享失败';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

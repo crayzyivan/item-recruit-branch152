@@ -1,0 +1,34 @@
+job:
+  intelligence:
+    score:
+      rule:
+        configs:
+          - stage-code: SCREENED
+            stage-order: 10
+            sub-stage-code: ASSESSMENT_SCORE
+            sub-stage-order: 1000
+          - stage-code: AI_VETTED
+            stage-order: 20
+            sub-stage-code: INTERVIEW
+            sub-stage-order: 2000
+          - stage-code: AI_VETTED
+            stage-order: 20
+            sub-stage-code: PROCTORING
+            sub-stage-order: 3000
+          - stage-code: AI_VETTED
+            stage-order: 20
+            sub-stage-code: TECHNICAL_SKILLS
+            sub-stage-order: 4000
+          - stage-code: AI_VETTED
+            stage-order: 20
+            sub-stage-code: SOFT_SKILLS
+            sub-stage-order: 5000
+          - stage-code: AI_VETTED
+            stage-order: 20
+            sub-stage-code: OVERALL
+            sub-stage-order: 6000
+        max-limit-configs:
+          - stage-code: SCREENED
+            max-weight-sum-limit: 100
+          - stage-code: AI_VETTED
+            max-weight-sum-limit: 100

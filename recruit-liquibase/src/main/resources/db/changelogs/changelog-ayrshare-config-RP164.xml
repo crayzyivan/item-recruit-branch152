@@ -1,0 +1,79 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="r-ayrshare-company-config-table-create-20250828" author="system">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_ayrshare_company_config"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE `r_ayrshare_company_config` (
+                                                         `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                                         `ayrshare_api_key` varchar(64) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT 'ayrshare平台API KEY；长度是冗余了一半',
+                                                         `ayrshare_domain` varchar(128) COLLATE utf8mb4_bin NOT NULL DEFAULT 'id-7f3ce' COMMENT 'ayrshare平台domain',
+                                                         `ayrshare_profile_key` varchar(64) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT 'ayrshare的配置；长度是冗余了一半',
+                                                         `ayrshare_subreddit` varchar(256) COLLATE utf8mb4_bin NOT NULL DEFAULT 'recruit' COMMENT 'reddit平台属性预留',
+                                                         `create_by_id` bigint NOT NULL DEFAULT '0' COMMENT '创建人',
+                                                         `create_by_name` varchar(64) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '创建人name',
+                                                         `update_by_id` bigint DEFAULT NULL COMMENT '更新人id',
+                                                         `update_by_name` varchar(64) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '更新人name',
+                                                         `company_code` varchar(64) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT 'companyCode',
+                                                         `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '删除标识 0未删除 1已删除',
+                                                         `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                                         `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                                                         PRIMARY KEY (`id`),
+                                                         KEY `idx_company_code` (`company_code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='company ayrshare配置信息'
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_ayrshare_company_config-remove-collate-1" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_ayrshare_company_config"/>
+        </preConditions>
+        <sql>
+            alter table r_ayrshare_company_config
+                modify ayrshare_api_key varchar(64) default '' not null comment 'ayrshare平台API KEY；长度是冗余了一半';
+
+            alter table r_ayrshare_company_config
+                modify ayrshare_domain varchar(128) default 'id-7f3ce' not null comment 'ayrshare平台domain';
+
+            alter table r_ayrshare_company_config
+                modify ayrshare_profile_key varchar(64) default '' not null comment 'ayrshare的配置；长度是冗余了一半';
+
+            alter table r_ayrshare_company_config
+                modify ayrshare_subreddit varchar(256) default 'recruit' not null comment 'reddit平台属性预留';
+
+            alter table r_ayrshare_company_config
+                modify create_by_name varchar(64) default '' not null comment '创建人name';
+
+            alter table r_ayrshare_company_config
+                modify update_by_name varchar(64) default '' not null comment '更新人name';
+
+            alter table r_ayrshare_company_config
+                modify company_code varchar(64) default '' not null comment 'companyCode';
+
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_ayrshare_company_config-remove-table-collate-1" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_ayrshare_company_config"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE r_ayrshare_company_config
+                DEFAULT CHARACTER SET utf8mb4;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

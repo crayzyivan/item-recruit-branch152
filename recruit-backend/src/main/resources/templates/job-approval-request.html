@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Job Approval Request</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .content { padding: 20px; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <div class="header">
+                <h2>Job Approval Request</h2>
+            </div>
+
+            <div class="content">
+                <p>A new job has been submitted for approval:</p>
+
+                <h3>Job Details:</h3>
+                <ul>
+                    <li><strong>Job Title:</strong> <span th:text="${jobTitle}">Job Title</span></li>
+                    <li><strong>Job ID:</strong> <span th:text="${jobId}">Job ID</span></li>
+                    <li><strong>Company Code:</strong> <span th:text="${companyCode}">Company Code</span></li>
+                </ul>
+
+                <p>Please review this job posting and take appropriate action through the job approval dashboard.</p>
+            </div>
+        </div>
+
+        <div class="footer">           
+            <p>本邮件由职位审核系统自动发送。</p>
+            <p>请勿直接回复本邮件。</p>
+        </div>
+    </div>
+</body>
+</html>

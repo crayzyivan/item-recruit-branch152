@@ -1,0 +1,278 @@
+{
+  "aliases": {
+    "recruit_job_ext_alias": {}
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "standard",
+        "search_analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          }
+        }
+      },
+      "jobDetail": {
+        "type": "text",
+        "analyzer": "standard",
+        "search_analyzer": "standard"
+      },
+      "location": {
+        "type": "text",
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 128
+          }
+        }
+      },
+      "locations": {
+        "type": "nested",
+        "include_in_parent": false,
+        "properties": {
+          "countryName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "countryId": {
+            "type": "long"
+          },
+          "stateName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "stateId": {
+            "type": "long"
+          },
+          "cityName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "cityId": {
+            "type": "long"
+          },
+          "locationName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "geoPoint": {
+            "type": "geo_point",
+            "ignore_malformed": true
+          }
+        }
+      },
+      "mainDuty": {
+        "type": "text",
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "minimumJobRequirement": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "preferredJobRequirement": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "skills": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "benefits": {
+        "type": "text",
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "customQuestions": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "urlCode": {
+        "type": "keyword"
+      },
+      "masterAccountId": {
+        "type": "long"
+      },
+      "customerId": {
+        "type": "long"
+      },
+      "customerName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text",
+            "analyzer": "standard"
+          }
+        }
+      },
+      "companyCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 64
+          }
+        }
+      },
+      "longitude": {
+        "type": "float"
+      },
+      "latitude": {
+        "type": "float"
+      },
+      "locationId": {
+        "type": "long"
+      },
+      "locationName": {
+        "type": "keyword"
+      },
+      "jobStatus": {
+        "type": "long"
+      },
+      "jobStatusName": {
+        "type": "keyword"
+      },
+      "needListed": {
+        "type": "long"
+      },
+      "typeId": {
+        "type": "long"
+      },
+      "typeName": {
+        "type": "keyword"
+      },
+      "categoryId": {
+        "type": "long"
+      },
+      "categoryName": {
+        "type": "keyword"
+      },
+      "modeId": {
+        "type": "long"
+      },
+      "modeName": {
+        "type": "keyword"
+      },
+      "createBy": {
+        "type": "long"
+      },
+      "updateBy": {
+        "type": "long"
+      },
+      "createUser": {
+        "type": "keyword"
+      },
+      "updateUser": {
+        "type": "keyword"
+      },
+      "ext1": {
+        "type": "keyword"
+      },
+      "ext2": {
+        "type": "keyword"
+      },
+      "salaryType": {
+        "type": "long"
+      },
+      "salaryTypeName": {
+        "type": "keyword"
+      },
+      "currency": {
+        "type": "long"
+      },
+      "currencyName": {
+        "type": "keyword"
+      },
+      "numberOpenings": {
+        "type": "long"
+      },
+      "createTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "updateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "minSalary": {
+        "type": "long"
+      },
+      "maxSalary": {
+        "type": "long"
+      },
+      "hotList": {
+        "type": "long"
+      },
+      "deleted": {
+        "type": "long"
+      },
+      "logoPath": {
+        "type": "text"
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 2,
+      "refresh_interval": "1s",
+      "max_result_window": 10000,
+      "analysis": {
+        "analyzer": {
+          "ngram_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "lowercase",
+              "ngram_filter"
+            ]
+          }
+        },
+        "filter": {
+          "ngram_filter": {
+            "type": "ngram",
+            "min_gram": 2,
+            "max_gram": 3
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,352 @@
+{
+  "aliases": {
+    "recruit_resume_match_alias": {}
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "candidateName": {
+        "type": "text",
+        "analyzer": "standard",
+        "search_analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          }
+        }
+      },
+      "candidateId": {
+        "type": "long"
+      },
+      "jobId": {
+        "type": "long"
+      },
+      "customerId": {
+        "type": "long"
+      },
+      "recommendation": {
+        "type": "long"
+      },
+      "assessmentScore": {
+        "type": "integer"
+      },
+      "jobTitleScore":{
+        "type":"integer"
+      },
+      "jobTitleResult": {
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "candidateEmail": {
+        "type":"text"
+      },
+      "resumeUrl": {
+        "type":"text"
+      },
+      "phoneNumber": {
+        "type":"text"
+      },
+      "skillsScore": {
+        "type":"integer"
+      },
+      "skillsResult": {
+        "type": "text"
+      },
+      "requirementScore": {
+        "type":"integer"
+      },
+      "requirementResult": {
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "responsibilityScore":{
+        "type":"integer"
+      },
+      "responsibilityResult":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "experienceScore":{
+        "type":"integer"
+      },
+      "experienceResult":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "locationScore":{
+        "type":"integer"
+      },
+      "locationResult":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "minimumSalaryScore":{
+        "type":"integer"
+      },
+      "minimumSalaryResult":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "maximumSalaryScore":{
+        "type":"integer"
+      },
+      "maximumSalaryResult":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "summary":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "strengths":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "weaknesses":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "analysis":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "comments":{
+        "type":"text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "createTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "updateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "deleted": {
+        "type": "long"
+      },
+      "candidateCreateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "candidateUpdateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "middleName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "gender": {
+        "type": "keyword"
+      },
+      "dateOfBirth": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd HH:mm||yyyy-MM-dd||epoch_millis"
+      },
+      "streetAddress": {
+        "type": "text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "apartmentOrSuite": {
+        "type": "keyword"
+      },
+      "candidateCountryId": {
+        "type": "long"
+      },
+      "candidateStateId": {
+        "type": "long"
+      },
+      "candidateCityId": {
+        "type": "long"
+      },
+      "candidateCountryName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "candidateStateName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "candidateCityName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "postalCode": {
+        "type": "keyword"
+      },
+      "currencyTypeId": {
+        "type": "long"
+      },
+      "expectedSalary": {
+        "type": "double"
+      },
+      "salaryTypeId": {
+        "type": "long"
+      },
+      "availableFrom": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd HH:mm||yyyy-MM-dd||epoch_millis"
+      },
+      "uploadStatus": {
+        "type": "keyword"
+      },
+      "title": {
+        "type": "text",
+        "analyzer":"standard",
+        "search_analyzer":"standard"
+      },
+      "masterAccountId": {
+        "type": "long"
+      },
+      "longitude": {
+        "type": "double"
+      },
+      "latitude": {
+        "type": "double"
+      },
+      "locationId": {
+        "type": "long"
+      },
+      "jobStatus": {
+        "type": "keyword"
+      },
+      "needListed": {
+        "type": "integer"
+      },
+      "urlCode": {
+        "type": "keyword"
+      },
+      "typeId": {
+        "type": "long"
+      },
+      "categoryId": {
+        "type": "long"
+      },
+      "modeId": {
+        "type": "long"
+      },
+      "salaryType": {
+        "type": "keyword"
+      },
+      "currency": {
+        "type": "keyword"
+      },
+      "numberOpenings": {
+        "type": "integer"
+      },
+      "jobCreateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "jobUpdateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "minSalary": {
+        "type": "double"
+      },
+      "maxSalary": {
+        "type": "double"
+      },
+      "hotList": {
+        "type": "integer"
+      },
+      "jobDeleted": {
+        "type": "boolean"
+      },
+      "locationName": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "companyTitleHash": {
+        "type": "keyword"
+      },
+      "interviewUrlId": {
+        "type": "text"
+      },
+      "companyCode": {
+        "type": "keyword"
+      },
+      "applyStatus": {
+        "type": "integer"
+      },
+      "salaryTypeName": {
+        "type": "text"
+      },
+      "currencyName": {
+        "type": "text"
+      },
+      "jobCurrencyName": {
+        "type": "text"
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 2,
+      "refresh_interval": "1s",
+      "max_result_window": 10000,
+      "analysis": {
+        "analyzer": {
+          "ngram_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "lowercase",
+              "ngram_filter"
+            ]
+          }
+        },
+        "filter": {
+          "ngram_filter": {
+            "type": "ngram",
+            "min_gram": 2,
+            "max_gram": 3
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+id,name,created_on,updated_on,website,logo,ayrshare_profile_key,linkedin_company_id,在IAM是否存在,devIAMCompanyCode,stagingIAMCompanyCode,ProdIAMCompnayCode,user_name,email,firstName,lastName,文本,stagingCompanyCode,prodCompanyCode,primaryUserId
+1,Item,2025-05-06 00:47:01.112852 +00:00,,https://item.com,https://recruit-staging.item.com/images/logo.svg,DDCA6932-A49A40E0-B2D1D058-A025D509,,存在,,,CItem4298356829856658481,yu.hua@item.com,yu.hua@item.com,yu,HUA,,,CItem4298356829856658481,1923258397777715203
+2,Unis,2025-05-06 00:53:47.959503 +00:00,,https://unisco.com,https://recruit.item.com/images/logo/unis/svg/logo.svg,AD2770F6-52114982-8DA67C83-8C9FA093,18269417,存在,,,Cunis0917550731259705935,will.zheng@item.com,will.zheng@item.com,will,zheng,,,Cunis0917550731259705935,1924761365835816963
+3,Cubework,2025-05-14 19:06:22.022759 +00:00,,https://www.cubework.com,https://www.cubework.com/logo/cubework-logo.svg,C56234E7-9489474F-99FAD749-DE58AE08,15812491,存在,,,CW,Cubework,Cubework,Cubework,Cubework,,,CW,1887303928895524867
+4,Azul Workforce,2025-05-17 00:28:31.203944 +00:00,,https://www.azulworkforce.com/,https://item-recruit-public.s3.us-west-1.amazonaws.com/public/logo/azul-workforce.svg,67570B9C-A9E645A9-922F4C34-9CD1C194,,不存在,,,,,,,,,,,
+5,"Unis, LLC",2025-05-22 16:50:17.880302 +00:00,,https://unisco.com,https://recruit.item.com/images/logo/unis/svg/logo.svg,5FC3BE9A-CA204449-A041FDF7-666C96F7,18269417,存在,,LT,Cunis0917550731259705935,will.zheng@item.com,will.zheng@item.com,will,zheng,,,Cunis0917550731259705935,1924761365835816963
+6,LSO,2025-05-22 17:49:30.471976 +00:00,,https://lso.com,https://item-recruit-public.s3.us-west-1.amazonaws.com/public/logo/lso.svg,8FA7C3CB-0C5F4420-816C77BD-0ECE2E06,,不存在,,,,,,,,,,,
+7,Plus Automation,2025-06-23 18:05:56.399339 +00:00,,,https://item-recruit-public.s3.us-west-1.amazonaws.com/public/logo/plus-automation.svg,D713E516-E17B4764-8266A7F2-8BF3E063,,不存在,,PAXX0001,,,,,,,,,
+8,Kummer,2025-06-27 18:30:16.105637 +00:00,,,,,,不存在,,,,,,,,,,,
+9,Mobile Ev,2025-06-27 21:59:00.269870 +00:00,,,,,,不存在,,,,,,,,,,,
+10,Law Divine Lux,2025-07-21 19:08:29.516178 +00:00,,https://lawdivineluxury.com,https://item-recruit-public.s3.us-west-1.amazonaws.com/public/logo/law-divine-luxury.svg,228B30EF-6E7F430A-A723B29A-338DFE4B,,不存在,,,,,,,,,,,
+11,DT Public Relations LLC,2025-07-21 22:40:23.749202 +00:00,,,,318C0483-109D4313-B937A86F-E84F0CEB,,不存在,,,,,,,,,,,

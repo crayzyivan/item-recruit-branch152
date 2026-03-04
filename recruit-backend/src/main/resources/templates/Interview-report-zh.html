@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试报告 - <span th:text="${companyName}"></span></title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        .content {
+            margin-bottom: 25px;
+        }
+        .highlight {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-list {
+            margin: 20px 0;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .info-item::before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .report-button {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        .report-button:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .score-box {
+            background-color: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .score-label {
+            font-size: 14px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+        .score-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        .expiry-notice {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .expiry-notice-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .expiry-notice-text {
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.5;
+        }
+        .expiry-notice-text strong {
+            color: #d68910;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #7f8c8d;
+        }
+        .signature {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="greeting">
+            尊敬的 <span th:text="${candidateName}"></span>，
+        </div>
+        
+        <div class="content">
+            <p>感谢您完成了 <strong><span th:text="${companyName}"></span></strong> 的 <strong><span th:text="${jobTitle}"></span></strong> 职位AI面试。</p>
+            
+            <p>我们很高兴地通知您，您的面试报告现已生成。报告包含您面试表现的详细分析，包括技能评估和综合评价。</p>
+        </div>
+        
+        <!-- Interview Score (if available) -->
+        <div th:if="${interviewScore != null}" class="score-box">
+            <div class="score-label">您的面试分数</div>
+            <div class="score-value" th:text="${interviewScore} + '/100'">分数</div>
+        </div>
+        
+        <div class="highlight">
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">职位：</span> <span th:text="${jobTitle}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">公司：</span> <span th:text="${companyName}"></span>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <a th:href="${reportUrl}" class="report-button" target="_blank">
+                    📄 查看面试报告
+                </a>
+            </div>
+            
+            <!-- Link Expiry Notice (if presigned URL) -->
+            <div th:if="${isPresignedUrl != null && isPresignedUrl}" class="expiry-notice">
+                <div class="expiry-notice-text">
+                    <span class="expiry-notice-icon">⏰</span>
+                    <strong>重要提示：</strong>此链接有效期为 <strong th:text="${linkExpireHours}"></strong> 小时，请尽快查看您的报告。
+                </div>
+            </div>
+            
+            <p style="margin-top: 15px; font-size: 14px; color: #555;">
+                点击上方按钮查看您的详细面试报告。报告包含您表现的全面反馈、技能评估和建议。
+            </p>
+        </div>
+        
+        <div class="content">
+            <p>我们的招聘团队将审查您的面试报告，并在招聘流程的下一步中与您联系。</p>
+            
+            <p>我们感谢您的时间以及加入<strong><span th:text="${companyName}"></span></strong>的兴趣。</p>
+        </div>
+        
+        <div class="footer">
+            <p>此致</p>
+            <div class="signature" th:text="${companyName}"></div>
+        </div>
+    </div>
+</body>
+</html>

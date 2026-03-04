@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invitation</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+        .container { background: #fff; padding: 24px; border-radius: 8px; max-width: 500px; margin: 40px auto; box-shadow: 0 2px 8px #eee; }
+        .header { color: #2d8cf0; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; }
+        .job-title { color: #2d8cf0; font-size: 1.2em; font-weight: bold; margin: 16px 0; }
+        .message { line-height: 1.6; margin: 16px 0; }
+        .footer { color: #888; font-size: 12px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">Invitation</div>
+
+    <div class="message">
+        Dear <span th:text="${candidateName}">Candidate</span>,
+    </div>
+
+    <div class="message">
+        You are invited to apply for the position:
+    </div>
+
+    <div class="job-title" th:text="${jobTitle}">Job Title</div>
+
+    <div class="message">
+        Company: <strong th:text="${companyName}">Company Name</strong>
+    </div>
+
+    <div class="message">
+        Please click the link below to submit your application:
+    </div>
+
+    <div class="message">
+        <a th:href="${jobUrl}" style="color: #2d8cf0; text-decoration: none; font-weight: bold;">Apply Now</a>
+    </div>
+
+    <div class="footer">
+        <p>Best regards,<br/>The Recruitment Team</p>
+    </div>
+</div>
+</body>
+</html>

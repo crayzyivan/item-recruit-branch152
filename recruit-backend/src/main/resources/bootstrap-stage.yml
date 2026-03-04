@@ -1,0 +1,28 @@
+#spring:
+##  application:
+##    name: recruit
+#
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: nacos-dev.item.pub:8848
+#        username: nacos
+#        password: nacos@123
+#        namespace: item
+#        group: DEFAULT_GROUP
+#        enabled: true
+#        fail-fast: false
+#      config:
+#        server-addr: nacos2-dev.item.pub:8848
+#        username: recruit
+#        password: Recruit@123
+#        namespace: ac530ea7-fd91-4c9f-a435-44ef01c4bcde
+#        file-extension: yaml
+#        group: DEFAULT_GROUP
+##        name: application-dev
+#        enabled: true
+#        fail-fast: true
+#        refresh-enabled: true
+##  config:
+##    import:
+##      - optional:nacos:${spring.application.name}.${spring.cloud.nacos.config.file-extension}

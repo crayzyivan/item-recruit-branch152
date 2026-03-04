@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.item</groupId>
+    <artifactId>recruit-project</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0.0</revision>
+        <java.version>21</java.version>
+        <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
+        <mybatis-plus.version>3.5.12</mybatis-plus.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <guava.version>33.4.8-jre</guava.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <lombok.version>1.18.30</lombok.version>
+
+        <redisson.version>3.25.2</redisson.version>
+        <!--        springboot 和 elastic版本兼容问题-->
+        <elasticsearch.version>8.13.4</elasticsearch.version>
+        <spring.elasticsearch.version>3.4.2</spring.elasticsearch.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <jwt.version>0.11.5</jwt.version>
+        <jakarta.version>6.0.0</jakarta.version>
+        <ognl.version>3.3.4</ognl.version>
+        <aws.version>1.12.569</aws.version>
+        <poi.version>5.2.3</poi.version>
+        <pdfbox.version>2.0.29</pdfbox.version>
+        <iam-oauth2-starter.version>0.1.1-SNAPSHOT</iam-oauth2-starter.version>
+        <ttl.version>2.14.5</ttl.version>
+        <statemachine.version>3.2.0</statemachine.version>
+        <commons-validator.version>1.10.0</commons-validator.version>
+        <argon2.version>2.11</argon2.version>
+        <okhttp.version>4.9.0</okhttp.version>
+        <encoder.version>1.2.3</encoder.version>
+        <scheduleTask.version>2.0.0</scheduleTask.version>
+        <jsoup.version>1.21.1</jsoup.version>
+        <caffeine.version>3.2.2</caffeine.version>
+        <ffmpeg.version>0.8.0</ffmpeg.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+    </dependencies>
+
+    <modules>
+        <module>recruit-backend</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

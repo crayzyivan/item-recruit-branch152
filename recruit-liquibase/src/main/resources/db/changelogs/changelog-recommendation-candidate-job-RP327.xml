@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- RP-327: Send job recommendation email to candidates -->
+    <!-- Create r_recommendation_candidate_job table to store recommendation email records -->
+
+    <!-- Step 1: Create r_recommendation_candidate_job table -->
+    <changeSet id="r_recommendation_candidate_job-create-table-20251023" author="ai-assistant">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="r_recommendation_candidate_job"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE `r_recommendation_candidate_job` (
+              `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+              `job_id` bigint unsigned NOT NULL COMMENT '岗位id',
+              `candidate_id` bigint unsigned NOT NULL COMMENT '应聘者id',
+              `recommend_by` bigint unsigned DEFAULT NULL COMMENT '推荐人的id',
+              `candidate_email` varchar(256) DEFAULT NULL COMMENT '推荐时发送的邮箱信息',
+              `recommend_time` datetime NOT NULL COMMENT '推荐时间',
+              `recommend_reasons` varchar(512) DEFAULT NULL COMMENT '推荐理由',
+              `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '删除 0未删除 1已删除',
+              `create_time` datetime NOT NULL COMMENT '创建时间',
+              `update_time` datetime NOT NULL COMMENT '更新时间',
+              PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发送job推荐应聘者邮件记录表';
+        </sql>
+    </changeSet>
+
+    <!-- Step 2: Create composite index idx_candidate_id_job_id -->
+    <changeSet id="r_recommendation_candidate_job-index-candidate-job-20251023" author="ai-assistant">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_recommendation_candidate_job"/>
+            <not>
+                <indexExists tableName="r_recommendation_candidate_job" indexName="idx_candidate_id_job_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE INDEX idx_candidate_id_job_id ON r_recommendation_candidate_job (candidate_id, job_id);
+        </sql>
+    </changeSet>
+
+    <!-- Step 3: Create composite index idx_job_id_candidate_id -->
+    <changeSet id="r_recommendation_candidate_job-index-job-candidate-20251023" author="ai-assistant">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_recommendation_candidate_job"/>
+            <not>
+                <indexExists tableName="r_recommendation_candidate_job" indexName="idx_job_id_candidate_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE INDEX idx_job_id_candidate_id ON r_recommendation_candidate_job (job_id, candidate_id);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

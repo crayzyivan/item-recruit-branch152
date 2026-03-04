@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Invitation - <span th:text="${companyName}"></span></title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        .content {
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .highlight {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-left: 4px solid #3498db;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        .test-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        .test-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        .interview-button {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        .interview-button:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+        .tips {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .tips-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .tips p {
+            margin: 0;
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .signature {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="company-name" th:text="${companyName}"></div>
+        </div>
+        
+        <div class="greeting">
+            Dear <span th:text="${candidateName}"></span>,
+        </div>
+        
+        <div class="content">
+            <p>Thank you for applying for the position of <strong><span th:text="${jobTitle}"></span></strong> at <strong><span th:text="${companyName}"></span></strong>. After carefully evaluating your application, we are pleased to invite you to participate in a written test and an AI interview, which are the next steps in our recruitment process.</p>
+            
+            <p>This written test and AI interview are designed to help us gain a deeper understanding of your skills, experience, and suitability for the position in a flexible manner. Here is what you need to know:</p>
+        </div>
+        
+        <div class="highlight">
+            <div class="info-item">
+                <span class="info-label">Friendly reminder:</span> Please complete the written test as soon as possible after receiving this email to avoid delaying the subsequent recruitment process.
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Platform:</span> The written test will be conducted through a comprehensive assessment. Please click the button below to start once you are ready.
+            </div>
+            
+            <div class="button-container">
+                <a th:href="${writtenTestUrl}" class="test-button" target="_blank">
+                    📝 Start written test
+                </a>
+            </div>
+            
+            <div class="info-item" style="margin-top: 25px;">
+                <span class="info-label">Access Period:</span> You can complete the interview at any time within 7 days after receiving the email. Once you start, you'll have 15 minutes to finish.
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Platform:</span> The interview will be conducted via AI. Please click the button below to begin when you're ready.
+            </div>
+            
+            <div class="button-container">
+                <a th:href="${interviewUrl}" class="interview-button" target="_blank">
+                    🎯 Start AI Interview
+                </a>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Format:</span> You'll receive a series of questions (both behavioral and role-related) displayed on the screen or read aloud by the AI. You need to record the process of answering.
+            </div>
+        </div>
+        
+        <div class="tips">
+            <div class="tips-title">📋 Preparation Tips:</div>
+            <p>Find a quiet space with good lighting, ensure your device (computer or smartphone) has a working camera and microphone, and test your internet connection in advance. You may also want to review your resume and think about your relevant experiences.</p>
+        </div>
+
+        <!-- Account and Password Information (only shown when showAccountInfo is true) -->
+        <div th:if="${showAccountInfo}" class="highlight" style="background-color: #e8f5e9; border-left-color: #4caf50;">
+            <div class="tips-title" style="color: #2e7d32;">🔐 Login Information:</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">Account (Email):</span> <span th:text="${account}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Initial Password:</span> <span th:text="${password}"></span>
+                </div>
+            </div>
+
+            <!-- Platform button (shown when platformUrl is available) -->
+            <div th:if="${platformUrl != null and !platformUrl.isEmpty()}" class="button-group">
+                <a th:href="${platformUrl}" class="platform-button" target="_blank">
+                    🌐 Access Platform
+                </a>
+            </div>
+
+            <p style="margin-top: 15px; color: #2e7d32; font-size: 14px;">
+                <strong>Note:</strong> Please use the above credentials to log in to the platform. We recommend changing your password after your first login for security purposes.
+            </p>
+        </div>
+
+        <div class="content">
+            <p>Once you submit your AI interview, our team will review your responses.</p>
+            
+            <p>We appreciate your interest in <strong><span th:text="${companyName}"></span></strong> and look forward to seeing your responses!</p>
+        </div>
+        
+        <div class="footer">
+            <p>Best regards,</p>
+            <div class="signature" th:text="${companyName}"></div>
+        </div>
+    </div>
+</body>
+</html>

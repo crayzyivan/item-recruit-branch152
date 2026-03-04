@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="r_candidate_job-add-naukri-application-id-20250828" author="recruit-backend">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate_job"/>
+            <not>
+                <columnExists tableName="r_candidate_job" columnName="naukri_application_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="naukri_application_id" type="varchar(128)" remarks="Naukri application id">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_candidate_job-index-naukri-application-id-20250828" author="recruit-backend">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate_job"/>
+            <not>
+                <indexExists tableName="r_candidate_job" indexName="idx_naukri_application_id"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="r_candidate_job" indexName="idx_naukri_application_id">
+            <column name="naukri_application_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <include file="changelogs/changelog-init-0.0.1.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-init-data-0.0.1.xml" relativeToChangelogFile="true"/>
+    <!-- RP-245: Add frontend categories to r_job_category table -->
+    <include file="changelogs/changelog-add-frontend-categories-RP245.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-init-states-0.0.1.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/change-init-0.0.1-data-cities.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-addnaukrijobid.xml" relativeToChangelogFile="true"/>
+    <!-- 新增：Ayrshare配置表 -->
+    <include file="changelogs/changelog-ayrshare-config-RP164.xml" relativeToChangelogFile="true"/>
+    <!-- 新增：Job表ayrshare_status字段 -->
+    <include file="changelogs/changelog-ayrshare-status-RP164-sub01.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-add-naukri-application-id.xml" relativeToChangelogFile="true"/>
+    <!-- RP-267: C端用户新邮箱字段兼容 -->
+    <include file="changelogs/changelog-candidate-permanent-email-RP267.xml" relativeToChangelogFile="true"/>
+    <!-- RP-327: 发送推荐岗位邮件记录表 -->
+    <include file="changelogs/changelog-recommendation-candidate-job-RP327.xml" relativeToChangelogFile="true"/>
+    <!-- RP-285: 数据迁移PostgreSQL-MySQL ID映射关系表 -->
+    <include file="changelogs/changelog-data-migration-mapping-RP285.xml" relativeToChangelogFile="true"/>
+    <!-- RP-387: 添加申请方式字段到 r_candidate_job 表 -->
+    <include file="changelogs/changelog-add-apply-method-RP387.xml" relativeToChangelogFile="true"/>
+    <!-- RP-390: 添加密码是否已告知字段到 r_candidate 表 -->
+    <include file="changelogs/changelog-add-is-password-told-RP390.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-zh-language.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-job-approval-system.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

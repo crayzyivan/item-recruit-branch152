@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- Add nullable Naukri Job ID column to r_job -->
+    <changeSet id="r_job-add-naukri-job-id-20250828" author="recruit-backend">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job"/>
+            <not>
+                <columnExists tableName="r_job" columnName="naukri_job_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_job">
+            <column name="naukri_job_id" type="varchar(128)" remarks="Naukri Job ID" afterColumn="interview_url_id">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Create index for faster lookups by Naukri Job ID -->
+    <changeSet id="r_job-index-naukri-job-id-20250828" author="recruit-backend">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job"/>
+            <not>
+                <indexExists tableName="r_job" indexName="idx_naukri_job_id"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="r_job" indexName="idx_naukri_job_id">
+            <column name="naukri_job_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+
+

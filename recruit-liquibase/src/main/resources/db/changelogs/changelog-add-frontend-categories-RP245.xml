@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- RP-245: Add frontend unique and low-match categories to r_job_category table -->
+    <changeSet id="add-frontend-categories-RP245" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job_category"/>
+        </preConditions>
+        <comment>Add frontend categories to support landing page requirements - RP-245</comment>
+        <sql>
+            INSERT INTO r_job_category (id, category_name) VALUES
+                                                            -- 完全独有的categories (5个)
+                                                            (51, 'AI Automation'),
+                                                            (52, 'Content Creation'),
+                                                            (53, 'Human Resources'),
+                                                            (54, 'Freelance and Contract Work'),
+                                                            (55, 'Engineering'),
+
+                                                            -- 匹配度不足需要补充的categories (4个)
+                                                            (56, 'Business and Finance'),
+                                                            (57, 'Marketing and Sales'),
+                                                            (58, 'Retail and Customer Service'),
+                                                            (59, 'Scientific Research');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

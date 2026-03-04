@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- RP-387: 添加申请方式字段 -->
+    <!-- 在 r_candidate_job 表中新增 apply_method 字段来标识申请方式 -->
+    <!-- 0: 平台申请, 1: 邀请面试自动投递 -->
+
+    <!-- 步骤1: 添加新字段 apply_method (初始为可空，用于安全迁移) -->
+    <changeSet id="r_candidate_job-add-apply-method-20251113" author="yarong.guo">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate_job"/>
+            <not>
+                <columnExists tableName="r_candidate_job" columnName="apply_method"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="apply_method" type="int" remarks="申请方式(0:平台申请;1:邀请面试自动投递)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
+

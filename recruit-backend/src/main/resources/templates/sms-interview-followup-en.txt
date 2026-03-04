@@ -1,0 +1,7 @@
+Interview Follow up Reminder
+Hello! {genderTitle} {candidateName}, after applying for the {jobTitle} position (job name) at {companyName} company, was unable to answer the call regarding the interview in a timely manner. We would like to remind you to call back {phoneNumber} as soon as possible at your convenience to further advance the interview process.
+Looking forward to your call back, thank you!
+{companyName} Company
+
+Reply "STOP" to any text message to cancel SMS communications.
+Reply "HELP" for assistance with text messages.

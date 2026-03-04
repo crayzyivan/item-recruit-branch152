@@ -1,0 +1,285 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="r_dictionary-ddl-add--chinese_name-2025-11-13" author="lh">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_dictionary"/>
+        </preConditions>
+        <!--        增加列 -->
+        <sql>
+            alter table r_dictionary
+                add `chinese_name` varchar(100) null comment '字典中value属性中文名';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_dictionary-dml-update-chinese_name-2025-11-13" author="lh">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_dictionary"/>
+            <columnExists tableName="r_dictionary" columnName="chinese_name"/>
+        </preConditions>
+        <!--        更新数据 -->
+        <sql>
+            -- 1. 性别表（gender）：value → chinese_name
+            UPDATE r_dictionary
+            SET chinese_name = CASE
+                                   WHEN value = 'Male' THEN '男性'
+                                   WHEN value = 'Female' THEN '女性'
+                                   WHEN value = 'Non-binary' THEN '非二元'
+                                   WHEN value = 'Prefer not to say' THEN '不愿透露'
+                                   ELSE chinese_name -- 保留已有中文值，不覆盖
+                END
+            WHERE value IN ('Male', 'Female', 'Non-binary', 'Prefer not to say');
+            -- 仅更新目标原始值
+
+
+            -- 2. 货币类型表（currency）：value（符号）→ chinese_name（中文名称）
+            UPDATE r_dictionary
+            SET chinese_name = value
+            WHERE value IN ('$', '£', '€', 'C$', '¥', '₹', '₱');
+
+
+            -- 3. 薪资周期表（pay_period）：value → chinese_name
+            UPDATE r_dictionary
+            SET chinese_name = CASE
+                                   WHEN value = 'Hourly' THEN '时薪'
+                                   WHEN value = 'Daily' THEN '日薪'
+                                   WHEN value = 'Weekly' THEN '周薪'
+                                   WHEN value = 'Monthly' THEN '月薪'
+                                   WHEN value = 'Yearly' THEN '年薪'
+                                   WHEN value = 'Commission' THEN '佣金制'
+                                   ELSE chinese_name
+                END
+            WHERE value IN ('Hourly', 'Daily', 'Weekly', 'Monthly', 'Yearly', 'Commission');
+
+
+            -- 4. 教育阶段表（education_stage）：value → chinese_name
+            UPDATE r_dictionary
+            SET chinese_name = CASE
+                                   WHEN value = 'High School' THEN '高中'
+                                   WHEN value = 'Community College' THEN '社区大学'
+                                   WHEN value = 'University' THEN '大学'
+                                   WHEN value = 'Vocational/Technical School' THEN '职业/技术学校'
+                                   WHEN value = 'Other' THEN '其他'
+                                   ELSE chinese_name
+                END
+            WHERE value IN ('High School', 'Community College', 'University', 'Vocational/Technical School', 'Other');
+
+            -- 5. 学历层次表（education_degree）：value → chinese_name
+            -- 注意：含单引号的英文值需用两个单引号 '' 转义（SQL语法要求）
+            UPDATE r_dictionary
+            SET chinese_name = CASE
+                                   WHEN value = 'High School Diploma' THEN '高中文凭'
+                                   WHEN value = 'GED' THEN '普通教育文凭'
+                                   WHEN value = 'Associate''s Degree' THEN '副学士学位' -- 单引号转义
+                                   WHEN value = 'Bachelor''s Degree' THEN '学士学位' -- 单引号转义
+                                   WHEN value = 'Master''s Degree' THEN '硕士学位' -- 单引号转义
+                                   WHEN value = 'Doctoral Degree' THEN '博士学位'
+                                   WHEN value = 'Post-Doctoral' THEN '博士后'
+                                   WHEN value = 'Other' THEN '其他'
+                                   ELSE chinese_name
+                END
+            WHERE value IN (
+                            'High School Diploma', 'GED', 'Associate''s Degree',
+                            'Bachelor''s Degree', 'Master''s Degree', 'Doctoral Degree',
+                            'Post-Doctoral', 'Other'
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_mode-ddl-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_mode"/>
+        </preConditions>
+        <sql>
+            alter table r_job_mode
+                add chinese_name varchar(100) null comment '中文';
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_mode-dml-update-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_mode"/>
+            <columnExists tableName="r_job_mode" columnName="chinese_name"/>
+        </preConditions>
+        <sql>
+            -- 办公模式表：name字段（英文）→ chinese_name字段（中文）更新脚本
+            UPDATE r_job_mode
+            SET chinese_name = CASE
+                                   WHEN mode_name = 'On-Site' THEN '现场办公'
+                                   WHEN mode_name = 'Remote' THEN '远程办公'
+                                   WHEN mode_name = 'Hybrid' THEN '混合办公'
+                                   WHEN mode_name = 'Other' THEN '其他'
+                                   ELSE chinese_name
+                END
+            WHERE mode_name IN ('On-Site', 'Remote', 'Hybrid', 'Other');
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_type-ddl-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_type"/>
+        </preConditions>
+        <sql>
+            alter table r_job_type
+                add chinese_name varchar(100) null comment '中文名称';
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_type-dml-update-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_type"/>
+            <columnExists tableName="r_job_type" columnName="chinese_name"/>
+        </preConditions>
+        <sql>
+            -- 雇佣类型表：name字段（英文）→ chinese_name字段（中文）更新脚本;
+            UPDATE r_job_type
+            SET chinese_name = CASE
+                                   WHEN type_name = 'Full Time' THEN '全职'
+                                   WHEN type_name = 'Part Time' THEN '兼职'
+                                   WHEN type_name = 'Contract' THEN '合同工'
+                                   WHEN type_name = 'Temporary' THEN '临时工'
+                                   WHEN type_name = 'Internship' THEN '实习生'
+                                   WHEN type_name = 'Other' THEN '其他'
+                                   ELSE chinese_name  -- 不覆盖已有中文值或非目标数据
+                END
+            WHERE type_name IN ('Full Time', 'Part Time', 'Contract', 'Temporary', 'Internship', 'Other');
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_category-ddl-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_category"/>
+            <not>
+                <columnExists tableName="r_job_category" columnName="chinese_name"/>
+            </not>
+        </preConditions>
+        <sql>
+            alter table r_job_category
+                add chinese_name varchar(128) null comment '中文名称';
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_category-dml-update-chinese_name-2025-11-13" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job_category"/>
+            <columnExists tableName="r_job_category" columnName="chinese_name"/>
+        </preConditions>
+        <sql>
+            -- r_job_category表：name字段（英文）→ chinese_name字段（中文）更新脚本
+            UPDATE r_job_category
+            SET chinese_name = CASE
+                                   WHEN category_name = 'Accounting and Financial Services' THEN '会计与金融服务'
+                                   WHEN category_name = 'Advertising and Marketing' THEN '广告与市场营销'
+                                   WHEN category_name = 'Agriculture and Farming' THEN '农业与种植业'
+                                   WHEN category_name = 'Automotive and Transportation' THEN '汽车与交通运输'
+                                   WHEN category_name = 'Beauty and Personal Care' THEN '美容与个人护理'
+                                   WHEN category_name = 'Construction and Contracting' THEN '建筑与工程承包'
+                                   WHEN category_name = 'Consulting and Professional Services' THEN '咨询与专业服务'
+                                   WHEN category_name = 'Education and Training' THEN '教育与培训'
+                                   WHEN category_name = 'Energy and Utilities' THEN '能源与公用事业'
+                                   WHEN category_name = 'Entertainment and Media' THEN '娱乐与媒体'
+                                   WHEN category_name = 'Food and Beverage' THEN '餐饮与食品饮料'
+                                   WHEN category_name = 'Healthcare and Medical' THEN '医疗健康与医药'
+                                   WHEN category_name = 'Hospitality and Tourism' THEN '酒店与旅游'
+                                   WHEN category_name = 'Information Technology' THEN '信息技术'
+                                   WHEN category_name = 'Legal and Law Services' THEN '法律与法律服务'
+                                   WHEN category_name = 'Manufacturing and Industrial' THEN '制造与工业'
+                                   WHEN category_name = 'Nonprofit and Philanthropy' THEN '非营利与慈善事业'
+                                   WHEN category_name = 'Real Estate and Property' THEN '房地产与物业'
+                                   WHEN category_name = 'Retail and E-commerce' THEN '零售与电子商务'
+                                   WHEN category_name = 'Sports and Recreation' THEN '体育与休闲'
+                                   WHEN category_name = 'Telecommunications' THEN '电信通信'
+                                   WHEN category_name = 'Travel and Tourism' THEN '旅行与旅游'
+                                   WHEN category_name = 'Wholesale and Distribution' THEN '批发与分销'
+                                   WHEN category_name = 'Environmental and Green Businesses' THEN '环保与绿色产业'
+                                   WHEN category_name = 'Fashion and Apparel' THEN '时尚与服装'
+                                   WHEN category_name = 'Home and Interior Design' THEN '家居与室内设计'
+                                   WHEN category_name = 'Music and Arts' THEN '音乐与艺术'
+                                   WHEN category_name = 'Photography and Videography' THEN '摄影与摄像'
+                                   WHEN category_name = 'Social Services and Advocacy' THEN '社会服务与公益倡导'
+                                   WHEN category_name = 'Technology and Software' THEN '科技与软件'
+                                   WHEN category_name = 'Web Development and Design' THEN '网页开发与设计'
+                                   WHEN category_name = 'Childcare and Early Education' THEN '幼儿托管与学前教育'
+                                   WHEN category_name = 'Fitness and Wellness' THEN '健身与健康养生'
+                                   WHEN category_name = 'Graphic Design and Creative Services' THEN '平面设计与创意服务'
+                                   WHEN category_name = 'Insurance and Risk Management' THEN '保险与风险管理'
+                                   WHEN category_name = 'Legal and Paralegal Services' THEN '法律与律师助理服务'
+                                   WHEN category_name = 'Manufacturing and Production' THEN '制造与生产'
+                                   WHEN category_name = 'Professional Development and Training' THEN '职业发展与培训'
+                                   WHEN category_name = 'Renewable Energy and Clean Tech' THEN '可再生能源与清洁技术'
+                                   WHEN category_name = 'Security and Surveillance' THEN '安全与监控'
+                                   WHEN category_name = 'Travel and Hospitality' THEN '旅行与酒店服务'
+                                   WHEN category_name = 'Event Planning and Management' THEN '活动策划与管理'
+                                   WHEN category_name = 'Environmental Services and Sustainability' THEN '环境服务与可持续发展'
+                                   WHEN category_name = 'Pet Services and Veterinary Care' THEN '宠物服务与兽医护理'
+                                   WHEN category_name = 'Aerospace and Defense' THEN '航空航天与国防'
+                                   WHEN category_name = 'Biotechnology and Pharmaceuticals' THEN '生物技术与制药'
+                                   WHEN category_name = 'Government and Public Administration' THEN '政府与公共管理'
+                                   WHEN category_name = 'Research and Development' THEN '研究与开发'
+                                   WHEN category_name = 'Transportation and Logistics' THEN '运输与物流'
+                                   WHEN category_name = 'Wedding and Event Services' THEN '婚礼与活动服务'
+                                   WHEN category_name = 'AI Automation' THEN '人工智能自动化'
+                                   WHEN category_name = 'Content Creation' THEN '内容创作'
+                                   WHEN category_name = 'Human Resources' THEN '人力资源'
+                                   WHEN category_name = 'Freelance and Contract Work' THEN '自由职业与合同工作'
+                                   WHEN category_name = 'Engineering' THEN '工程技术'
+                                   WHEN category_name = 'Business and Finance' THEN '商业与金融'
+                                   WHEN category_name = 'Marketing and Sales' THEN '市场营销与销售'
+                                   WHEN category_name = 'Retail and Customer Service' THEN '零售与客户服务'
+                                   WHEN category_name = 'Scientific Research' THEN '科学研究'
+                                   WHEN category_name = 'Other' THEN '其他'
+                                   ELSE chinese_name  -- 不覆盖已有中文值或非目标数据
+                END
+            WHERE category_name IN (
+                           'Accounting and Financial Services', 'Advertising and Marketing', 'Agriculture and Farming',
+                           'Automotive and Transportation', 'Beauty and Personal Care', 'Construction and Contracting',
+                           'Consulting and Professional Services', 'Education and Training', 'Energy and Utilities',
+                           'Entertainment and Media', 'Food and Beverage', 'Healthcare and Medical',
+                           'Hospitality and Tourism', 'Information Technology', 'Legal and Law Services',
+                           'Manufacturing and Industrial', 'Nonprofit and Philanthropy', 'Real Estate and Property',
+                           'Retail and E-commerce', 'Sports and Recreation', 'Telecommunications',
+                           'Travel and Tourism', 'Wholesale and Distribution', 'Environmental and Green Businesses',
+                           'Fashion and Apparel', 'Home and Interior Design', 'Music and Arts',
+                           'Photography and Videography', 'Social Services and Advocacy', 'Technology and Software',
+                           'Web Development and Design', 'Childcare and Early Education', 'Fitness and Wellness',
+                           'Graphic Design and Creative Services', 'Insurance and Risk Management', 'Legal and Paralegal Services',
+                           'Manufacturing and Production', 'Professional Development and Training', 'Renewable Energy and Clean Tech',
+                           'Security and Surveillance', 'Travel and Hospitality', 'Event Planning and Management',
+                           'Environmental Services and Sustainability', 'Pet Services and Veterinary Care', 'Aerospace and Defense',
+                           'Biotechnology and Pharmaceuticals', 'Government and Public Administration', 'Research and Development',
+                           'Transportation and Logistics', 'Wedding and Event Services', 'AI Automation',
+                           'Content Creation', 'Human Resources', 'Freelance and Contract Work',
+                           'Engineering', 'Business and Finance', 'Marketing and Sales',
+                           'Retail and Customer Service', 'Scientific Research', 'Other'
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_dictionary_current_type_remark-2025-11-17" author="hua.liu">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_dictionary"/>
+            <columnExists tableName="r_dictionary" columnName="chinese_name"/>
+        </preConditions>
+        <sql>
+            UPDATE r_dictionary
+            SET chinese_name = CASE
+                                   WHEN remark = 'US Dollar' THEN '美元'
+                                   WHEN remark = 'British Pound' THEN '英镑'
+                                   WHEN remark = 'Euro' THEN '欧元'
+                                   WHEN remark = 'Canadian Dollar' THEN '加拿大元'
+                                   WHEN remark = 'Chinese Yuan' THEN '人民币'
+                                   WHEN remark = 'Indian Rupee' THEN '印度卢比'
+                                   WHEN remark = 'Philippine Peso' THEN '菲律宾比索'
+                                   ELSE chinese_name -- 保留已有中文值，不覆盖其他未匹配的记录
+                END
+            WHERE remark IN ('US Dollar', 'British Pound', 'Euro', 'Canadian Dollar', 'Chinese Yuan', 'Indian Rupee', 'Philippine Peso');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

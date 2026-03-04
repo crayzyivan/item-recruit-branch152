@@ -1,0 +1,1419 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/pro
+                   http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="candidate-table-create-20250715" author="liuyabin">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_candidate"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE `r_candidate` (
+                                           `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                           `candidate_name` varchar(50) NOT NULL COMMENT '候选人名字full name',
+                                           `middle_name` varchar(50) DEFAULT NULL,
+                                           `candidate_email` varchar(100) NOT NULL COMMENT '申请者邮箱',
+                                           `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                           `resume_url` varchar(500) DEFAULT NULL COMMENT '简历地址',
+                                           `gender` varchar(255) DEFAULT NULL COMMENT '性别',
+                                           `date_of_birth` date DEFAULT NULL COMMENT '出生日期',
+                                           `street_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '街道地址',
+                                           `apartment_or_suite` varchar(255) DEFAULT NULL COMMENT '详细地址',
+                                           `country_id` bigint DEFAULT NULL COMMENT '国家id',
+                                           `state_id` bigint DEFAULT NULL COMMENT '省id',
+                                           `city_id` bigint DEFAULT NULL COMMENT '市id',
+                                           `postal_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮政编码',
+                                           `education_id` bigint DEFAULT NULL COMMENT '教育历史id,r_candidate_education表id',
+                                           `employment_id` bigint DEFAULT NULL COMMENT '工作经历id,r_candidate_employment表id',
+                                           `create_time` datetime NOT NULL COMMENT '创建时间',
+                                           `update_time` datetime NOT NULL COMMENT '更新时间',
+                                           `phone_number` varchar(20) NOT NULL COMMENT '手机号码',
+                                           `currency_type_id` bigint DEFAULT NULL COMMENT '薪资货币类型id',
+                                           `expected_salary` decimal(10,4) DEFAULT NULL COMMENT '期望薪资',
+                                           `salary_type_id` bigint DEFAULT NULL COMMENT '薪资类型id',
+                                           `available_from` date DEFAULT NULL COMMENT '入职时间',
+                                           `ext_1` varchar(200) DEFAULT NULL COMMENT '扩展',
+                                           `ext_2` varchar(200) DEFAULT NULL COMMENT '扩展',
+                                           `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '逻辑删除 0未删除 1已删除',
+                                           PRIMARY KEY (`id`),
+                                           KEY `candidate_name` (`candidate_name`,`candidate_email`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='申请者表';
+        </sql>
+    </changeSet>
+    <changeSet id="r_candidate_education-create-20250715" author="liuyabin">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_candidate_education"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE `r_candidate_education` (
+                                                     `id` bigint NOT NULL AUTO_INCREMENT,
+                                                     `institution_type_id` bigint NOT NULL COMMENT '机构类型',
+                                                     `institution_name` varchar(255) DEFAULT NULL COMMENT '机构名称',
+                                                     `graduated` int DEFAULT NULL COMMENT '是否毕业（0：未毕业、1：毕业）',
+                                                     `start_date` date DEFAULT NULL COMMENT '开始时间',
+                                                     `end_date` date DEFAULT NULL COMMENT '毕业时间',
+                                                     `degree_id` bigint DEFAULT NULL COMMENT '学位id',
+                                                     `major` varchar(100) DEFAULT NULL COMMENT '专业',
+                                                     `Minor` varchar(100) DEFAULT NULL,
+                                                     PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_candidate_job-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_candidate_job` (
+                                               `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+                                               `candidate_id` bigint unsigned NOT NULL COMMENT '申请者id 关联 r_candidate.id',
+                                               `job_id` bigint unsigned NOT NULL COMMENT '职位id 关联r_job.id',
+                                               `customer_id` bigint NOT NULL COMMENT '公司id',
+                                               `cover_letter` varchar(1000) DEFAULT '' COMMENT '推荐信',
+                                               `posted` tinyint NOT NULL DEFAULT '0' COMMENT '是否送达 0未送达 1已送达',
+                                               `apply_status` tinyint NOT NULL DEFAULT '0' COMMENT '简历申请状态(0:未被查看;1:已送达;2:录用;-1:拒绝)',
+                                               `reason` varchar(100) NOT NULL DEFAULT '' COMMENT '原因',
+                                               `recommendation` varchar(50)  DEFAULT NULL COMMENT 'ai匹配建议',
+                                               `assessment_score` varchar(255)  DEFAULT NULL COMMENT '简历匹配度',
+                                               `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '删除标志 0未删除 1已删除',
+                                               `create_time` datetime NOT NULL COMMENT '创建时间',
+                                               `update_time` datetime NOT NULL COMMENT '更新时间',
+                                               PRIMARY KEY (`id`),
+                                               KEY `idx_candidate_id_job_id` (`candidate_id`,`job_id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='申请者和职位关系';
+        </sql>
+    </changeSet>
+    <changeSet id="r_cities-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_cities` (
+                                        `id` bigint unsigned NOT NULL,
+                                        `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+                                        `state_id` bigint NOT NULL,
+                                        `state_code` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+                                        `country_id` bigint NOT NULL,
+                                        `country_code` char(2) CHARACTER SET utf8mb4 NOT NULL,
+                                        `latitude` decimal(10,8) NOT NULL,
+                                        `longitude` decimal(11,8) NOT NULL,
+                                        `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                        `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                        `flag` smallint NOT NULL DEFAULT '1',
+                                        `wikiDataId` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='城市表（省）';
+        </sql>
+    </changeSet>
+    <changeSet id="r_countries-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_countries` (
+                                           `id` bigint NOT NULL,
+                                           `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                           `iso3` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `numeric_code` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `iso2` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `phonecode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `capital` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `currency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `currency_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `currency_symbol` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `tld` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `native` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `region` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `region_id` bigint DEFAULT NULL,
+                                           `subregion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `subregion_id` bigint DEFAULT NULL,
+                                           `nationality` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `timezones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+                                           `translations` text CHARACTER SET utf8mb4,
+                                           `latitude` decimal(10,8) DEFAULT NULL,
+                                           `longitude` decimal(11,8) DEFAULT NULL,
+                                           `emoji` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `emojiU` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                           `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           `flag` smallint NOT NULL DEFAULT '1',
+                                           `wikiDataId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                           PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='国家';
+        </sql>
+    </changeSet>
+    <changeSet id="r_states-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_states` (
+                                        `id` bigint NOT NULL,
+                                        `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+                                        `country_id` bigint NOT NULL,
+                                        `country_code` char(2) CHARACTER SET utf8mb4 NOT NULL,
+                                        `fips_code` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        `iso2` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        `type` varchar(191) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        `level` int DEFAULT NULL,
+                                        `parent_id` int DEFAULT NULL,
+                                        `native` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        `latitude` decimal(10,8) DEFAULT NULL,
+                                        `longitude` decimal(11,8) DEFAULT NULL,
+                                        `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                        `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                        `flag` smallint NOT NULL DEFAULT '1',
+                                        `wikiDataId` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+                                        PRIMARY KEY (`id`),
+                                        KEY `country_id` (`country_id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='州';
+        </sql>
+    </changeSet>
+    <changeSet id="r_dictionary-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_dictionary` (
+                                            `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                            `type` varchar(64) NOT NULL COMMENT '字典类型',
+                                            `code` varchar(64) NOT NULL COMMENT '字典项编码',
+                                            `value` varchar(128) NOT NULL COMMENT '字典项值',
+                                            `sort` int DEFAULT '0' COMMENT '排序',
+                                            `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+                                            `status` tinyint DEFAULT '1' COMMENT '状态（1启用 0禁用）',
+                                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                            PRIMARY KEY (`id`),
+                                            KEY `idx_type` (`type`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='数据字典表';
+        </sql>
+    </changeSet>
+    <changeSet id="r_job-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_job` (
+                                     `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                     `title` varchar(200) NOT NULL DEFAULT '' COMMENT '职位title',
+                                     `customer_id` bigint unsigned NOT NULL COMMENT '客户Id',
+                                     `master_account_id` bigint unsigned NOT NULL COMMENT '客户主账号Id',
+                                     `longitude` decimal(9,6) DEFAULT NULL COMMENT '经度',
+                                     `latitude` decimal(8,6) DEFAULT NULL COMMENT '纬度',
+                                     `location_id` int NOT NULL COMMENT '位置Id',
+                                     `location_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '位置信息',
+                                     `job_status` tinyint NOT NULL DEFAULT '0' COMMENT '状态(0:draf,1:active,-1:closed,2:other)',
+                                     `need_listed` tinyint NOT NULL COMMENT '是否需要显示在列表中',
+                                     `url_code` varchar(100) NOT NULL COMMENT 'url中显示的字符用-连接',
+                                     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     `update_time` datetime NOT NULL COMMENT '更新时间',
+                                     `min_salary` int NOT NULL DEFAULT '0' COMMENT '最小薪资(单位:分)',
+                                     `max_salary` int NOT NULL DEFAULT '0' COMMENT '最大信息(单位:分)',
+                                     `number_openings` int DEFAULT NULL COMMENT '空缺数量',
+                                     `mode_id` int NOT NULL COMMENT '类型id关联 r_job_mode.id',
+                                     `category_id` int NOT NULL COMMENT '关联r_job_category.id',
+                                     `salary_type` int NOT NULL DEFAULT '4' COMMENT '薪酬类型1:Hourly,2:Daily,3:Weekly,4:Monthly,5:Annual,6:Commission,7:Other',
+                                     `currency_type` int NOT NULL DEFAULT '1' COMMENT '货币类型1：US Dollar，2：British Pound，3：Euro，4：Canadian Dollar，5：Chinese Yuan，6：Philippine Peso',
+                                     `type_id` int NOT NULL COMMENT '关联 r_job_type.id',
+                                     `create_user` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人名字',
+                                     `create_by` bigint NOT NULL COMMENT '创建人Id',
+                                     `update_by` bigint NOT NULL COMMENT '更新人Id',
+                                     `hot_list` tinyint NOT NULL DEFAULT '0' COMMENT 'hotList状态 0关闭 1开启',
+                                     `company_title_hash` varchar(32) NOT NULL DEFAULT '' COMMENT 'urlcodehash值',
+                                     `interview_url_id` varchar(100) DEFAULT NULL COMMENT 'ai面试id',
+                                     `ext_1` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '扩展字段1',
+                                     `ext_2` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '扩展字段2',
+                                     `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '逻辑删除0未删除 1已删除',
+                                     PRIMARY KEY (`id`),
+                                     KEY `idx_master_account_id` (`master_account_id`),
+                                     KEY `idx_company_title_hash` (`company_title_hash`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='职位表';
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_category-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_job_category` (
+                                              `id` int unsigned NOT NULL AUTO_INCREMENT,
+                                              `category_name` varchar(50) NOT NULL,
+                                              PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_mode-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_job_mode` (
+                                           `id` int unsigned NOT NULL AUTO_INCREMENT,
+                                           `mode_name` varchar(50) NOT NULL,
+                                           PRIMARY KEY (`id`)
+             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_type-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_job_type` (
+                                          `id` int unsigned NOT NULL AUTO_INCREMENT,
+                                          `type_name` varchar(20) NOT NULL,
+                                          PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_regions-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_regions` (
+                                         `id` bigint NOT NULL,
+                                         `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                         `translations` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+                                         `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                         `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                         `flag` smallint NOT NULL DEFAULT '1',
+                                         `wikiDataId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                         PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='地区';
+        </sql>
+    </changeSet>
+    <changeSet id="r_screen_job-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_screen_job` (
+                                            `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                                            `job_id` bigint NOT NULL,
+                                            `candidate_id` bigint NOT NULL,
+                                            `score` int NOT NULL DEFAULT '0' COMMENT '匹配分值',
+                                            `process_status` tinyint NOT NULL DEFAULT '0' COMMENT '待处理/处理中/处理完成',
+                                            `customer_id` bigint NOT NULL COMMENT '客户Id',
+                                            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_subregions-create-20250715" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_subregions` (
+                                            `id` bigint NOT NULL,
+                                            `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                            `translations` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+                                            `region_id` bigint NOT NULL,
+                                            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                            `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                            `flag` smallint NOT NULL DEFAULT '1',
+                                            `wikiDataId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                                            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='子地区';
+        </sql>
+    </changeSet>
+    <changeSet id="r_employment_history-create-20250716" author="liuyabin">
+        <sql>
+            CREATE TABLE `r_employment_history` (
+                                                    `id` bigint NOT NULL AUTO_INCREMENT,
+                                                    `candidate_id` bigint NOT NULL COMMENT '应聘者id r_candidate表id',
+                                                    `company_name` varchar(100) COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '公司名称',
+                                                    `current_employer` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '是否在职（0：离职、1：在职）',
+                                                    `job_title` varchar(100) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '职位',
+                                                    `start_date` date DEFAULT NULL COMMENT '开始时间',
+                                                    `end_date` date DEFAULT NULL COMMENT '结束时间',
+                                                    `key_responsibilities` longtext COLLATE utf8mb4_0900_ai_ci COMMENT '主要职责',
+                                                    PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="r_job_ddl_202507021_001" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify customer_id bigint unsigned null comment '客户Id';
+
+            alter table r_job
+                modify master_account_id bigint unsigned null comment '客户主账号Id';
+
+            alter table r_job
+                add company_code varchar(32) default '' not null comment '公司code' after max_salary;
+
+            create index idx_company_code
+                on r_job (company_code);
+
+            drop index idx_master_account_id on r_job;
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_status_record-create-20250721" author="liyunlong">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_job_status_record"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_job_status_record" remarks="招聘状态流转记录表">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="candidate_job_id" type="bigint" remarks="申请者和职位id r_candidate_job表id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apply_status" type="tinyint" defaultValue="0" remarks="简历申请状态(0:已提交;10:AI筛选;20:AI面试;30:人工审核;40:就绪;50:背景审核;99:拒绝)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apply_event" type="varchar(20)" defaultValue="" remarks="触发事件">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_by" type="bigint" defaultValue="" remarks="创建人id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="r_candidate_job-add-company_code" author="liuyabin">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="company_code" type="varchar(32)" afterColumn="customer_id">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_report_daily-create-20250721" author="liuyabin">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_report_daily"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE r_report_daily (
+                                                    id BIGINT UNSIGNED auto_increment NOT NULL,
+                                                    company_code varchar(32) NOT NULL,
+                                                    apply_count BIGINT UNSIGNED DEFAULT 0 NOT NULL,
+                                                    denied_count BIGINT UNSIGNED DEFAULT 0 NOT NULL,
+                                                    acceped_count BIGINT UNSIGNED DEFAULT 0 NOT NULL,
+                                                    on_hold_count varchar(100) DEFAULT '0' NOT NULL,
+                                                    CONSTRAINT r_top_report_pk PRIMARY KEY (id)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_candidate_job_ddl_20250721_001" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+            <columnExists tableName="r_candidate_job" columnName="apply_status"/>
+        </preConditions>
+
+        <sql dbms="mysql">
+            ALTER TABLE r_candidate_job
+                MODIFY COLUMN apply_status tinyint NOT NULL DEFAULT '0'
+                COMMENT '简历申请状态(0:已提交;10:AI筛选;20:AI面试;30:人工审核;40:就绪;50:背景审核;99:拒绝)';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_status_record-add-company_code" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_job_status_record"/>
+        </preConditions>
+        <addColumn tableName="r_job_status_record">
+            <column name="company_code" type="varchar(32)" remarks="公司编号" afterColumn="candidate_job_id">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_report_daily-update-20250723" author="liuyabin">
+        <preConditions>
+            <tableExists tableName="r_report_daily"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE r_report_daily ADD create_time DATETIME NOT NULL;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="r_ai_vetted_result-create-20250722" author="liyunlong">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_ai_vetted_result"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_ai_vetted_result" remarks="AI审核结果表">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="candidate_job_id" type="bigint" remarks="申请者和职位id r_candidate_job表id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interview_time" type="datetime" remarks="面试时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interview_score" type="tinyint" remarks="面试分数">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proctoring_score" type="tinyint" remarks="监考分数">
+                <constraints nullable="false"/>
+            </column>
+            <column name="overall_skill_assessment" type="varchar(500)" defaultValue="" remarks="技能总体评价">
+                <constraints nullable="true"/>
+            </column>
+            <column name="overall_skill_score" type="tinyint" remarks="技能总体评分">
+                <constraints nullable="false"/>
+            </column>
+            <column name="overall_skill_level" type="tinyint" remarks="技能总体评级(0:没有经历;10:初级;20:中级;30:高级;)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="r_ai_vetted_result_skill-create-20250722" author="liyunlong">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_ai_vetted_result_skill"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_ai_vetted_result_skill" remarks="AI审核技能明细表">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vetted_result_id" type="bigint" remarks="AI审核结果表id r_ai_vetted_result表id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="skill_name" type="varchar(200)" defaultValue="" remarks="技能名称">
+                <constraints nullable="false"/>
+            </column>
+            <column name="skill_score" type="tinyint" remarks="技能评分">
+                <constraints nullable="false"/>
+            </column>
+            <column name="skill_level" type="tinyint" remarks="技能评级(0:没有经历;10:初级;20:中级;30:高级;)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="skill_assessment" type="varchar(500)" defaultValue="" remarks="技能评价">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="r_candidate_job_ddl_20250723_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="interview_mail_status" type="tinyint" remarks="是否已发送ai面试邮件(0:未发送，1：已发送)" defaultValue="0"/>
+            <column name="interview_start_time" type="datetime" remarks="ai面试开始时间" defaultOnNull="true"/>
+            <column name="interview_end_time" type="datetime" remarks="ai面试结束时间" defaultOnNull="true"/>
+            <column name="interview_time" type="datetime" remarks="应聘者参加面试时间" defaultOnNull="true"/>
+            <column name="overall_score" type="int" remarks="ai面试评分" defaultOnNull="true"/>
+            <column name="cheating_analysis" type="int" remarks="ai面试作弊分析得分" defaultOnNull="true"/>
+            <column name="camera_recording_url" type="varchar(100)" remarks="ai面试视频地址" defaultOnNull="true"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_ai_callback-create-20250723" author="guoyarong">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_ai_callback"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_ai_callback" remarks="AI回调信息表">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event" type="varchar(50)" remarks="回调事件">
+                <constraints nullable="true"/>
+            </column>
+            <column name="timestamp" type="datetime" defaultOnNull="true" remarks="事件ai处理完成时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interview_id" type="varchar(100)" remarks="ai面试id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="interviewer_email" type="varchar(100)" remarks="面试者邮箱">
+                <constraints nullable="true"/>
+            </column>
+            <column name="call_id" type="varchar(500)" defaultValue="" remarks="面试者面试id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="int" defaultValue="0" remarks="任务处理状态（-1：处理失败，0：未处理，1处理中，2：已处理）">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="r_candidate_job-add-location-20250723" author="liuyabin">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+            <not>
+                <columnExists tableName="r_candidate_job" columnName="location"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="location" type="varchar(50)" afterColumn="company_code" remarks="候选人所在地址">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_job_status_record-add-old_apply_status" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_job_status_record"/>
+        </preConditions>
+        <addColumn tableName="r_job_status_record">
+            <column name="old_apply_status" type="tinyint" remarks="旧的招聘状态" afterColumn="company_code">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="r_ai_callback_ddl_20250724_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_ai_callback"/>
+        </preConditions>
+        <addColumn tableName="r_ai_callback">
+            <column name="candidate_job_id" type="bigint" remarks="申请者和职位id r_candidate_job表id" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="r_ai_vetted_result-ddl-20250725" author="liyunlong">
+        <preConditions>
+                <tableExists tableName="r_ai_vetted_result"/>
+                <columnExists tableName="r_ai_vetted_result" columnName="interview_time"/>
+        </preConditions>
+
+        <setColumnRemarks tableName="r_ai_vetted_result" columnName="interview_time" columnDataType="datetime" remarks="面试时间"/>
+        <setColumnRemarks tableName="r_ai_vetted_result" columnName="interview_score" columnDataType="tinyint" remarks="面试分数"/>
+        <setColumnRemarks tableName="r_ai_vetted_result" columnName="proctoring_score" columnDataType="tinyint" remarks="监考分数"/>
+        <setColumnRemarks tableName="r_ai_vetted_result" columnName="overall_skill_score" columnDataType="tinyint" remarks="技能总体评分"/>
+        <setColumnRemarks tableName="r_ai_vetted_result" columnName="overall_skill_score" columnDataType="tinyint" remarks="技能总体评分"/>
+        <addColumn tableName="r_ai_vetted_result">
+            <column name="transcript" type="longtext" remarks="面试记录" afterColumn="overall_skill_level">
+                <constraints nullable="true"/>
+            </column>
+            <column name="camera_recording_url" type="varchar(200)" remarks="报告url" afterColumn="transcript">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_job_job_status_comment_2025_07_25" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="job_status"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify job_status tinyint default 0 not null comment '状态0: Draft,1: Active, 2:Closed,3:Other, 4:Awaiting Payment, 5:On Hold';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_currency_2025_07_26" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="currency_type"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify currency_type int null comment '货币类型参考字典表currency_type类型数据';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job_salary_type_2025_07_26" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="salary_type"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify salary_type int default 15 not null comment 'salary类型参考字典表pay_cycle类型数据';
+        </sql>
+    </changeSet>
+    <changeSet id="r_candidate_expected_salary_2025072801" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="expected_salary"/>
+        </preConditions>
+        <modifyDataType tableName="r_candidate" columnName="expected_salary" newDataType="int"/>
+        <addColumn tableName="r_candidate">
+            <column name="countryName" type="varchar(100)" remarks="国家名称" defaultOnNull="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stateName" type="varchar(255)" remarks="省名" defaultOnNull="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cityName" type="varchar(255)" remarks="市名称" defaultOnNull="true">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_candidate_expected_salary_2025072802" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="countryName"/>
+            <columnExists tableName="r_candidate" columnName="stateName"/>
+            <columnExists tableName="r_candidate" columnName="cityName"/>
+        </preConditions>
+        <renameColumn tableName="r_candidate" oldColumnName="countryName" newColumnName="country_name" columnDataType="varchar(100)"/>
+        <renameColumn tableName="r_candidate" oldColumnName="stateName" newColumnName="state_name" columnDataType="varchar(255)"/>
+        <renameColumn tableName="r_candidate" oldColumnName="cityName" newColumnName="city_name" columnDataType="varchar(255)"/>
+    </changeSet>
+    <changeSet id="r_report_daily-add-colum-accept_count" author="liuyabin">
+        <preConditions>
+            <tableExists tableName="r_report_daily"/>
+            <not>
+                <columnExists tableName="r_report_daily" columnName="accept_count"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_report_daily">
+            <column name="accept_count" type="bigint" remarks="最终接受人数" afterColumn="on_hold_count">
+                <constraints nullable="true"/>
+            </column>
+
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_candidate_ddl_20250730_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate"/>
+        </preConditions>
+        <addColumn tableName="r_candidate">
+            <column name="candidate_id" type="bigint" remarks="iam 应聘者id" defaultOnNull="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="upload_status" type="binary" remarks="简历上传状态(0:未上传，1：已上传)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="r_points_operation_log-create-20250729" author="liyunlong">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_points_operation_log"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_points_operation_log" remarks="积分操作记录表">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint" remarks="用户ID（主/子账号）">
+                <constraints nullable="false"/>
+            </column>
+            <column name="company_code" type="varchar(32)" remarks="公司code">
+                <constraints nullable="true"/>
+            </column>
+            <column name="transaction_no" type="varchar(50)" defaultValue="" remarks="交易流水号">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_type" type="tinyint" remarks="交易类型(0:充值;10:积分转出;20:积分转入;30:简历下载;40:发布职位;50:筛选简历;60:面试邮件;70:ai面试;80:背景调查)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="decimal(10,2)" remarks="充值金额">
+                <constraints nullable="true"/>
+            </column>
+            <column name="points" type="int" remarks="积分数(正数增加积分,负数扣除积分)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="point_status" type="tinyint" remarks="状态(0正常;1预占;2已取消;3失败)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="freeze_action_type" type="tinyint" remarks="预占意图(1待确认;2待取消)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_id" type="bigint" remarks="关联的职位Id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="candidate_id" type="bigint" remarks="关联的候选人id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="candidate_job_id" type="bigint" remarks="关联的候选与职位id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="remark" type="varchar(255)" defaultValue="" remarks="备注">
+                <constraints nullable="true"/>
+            </column>
+            <column name="retry_count" type="int" remarks="重试次数">
+                <constraints nullable="true"/>
+            </column>
+            <column name="error_message" type="varchar(500)" defaultValue="" remarks="失败原因">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="datetime" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="datetime" remarks="更新时间">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted" type="tinyint(1)" defaultValue="0" remarks="逻辑删除(0未删除 1已删除)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="r_ai_vetted_result_ddl_20250804_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_ai_vetted_result"/>
+        </preConditions>
+        <addColumn tableName="r_ai_vetted_result">
+            <column name="summarized_video_url" type="varchar(255)" remarks="ai面试总结视频" defaultOnNull="true">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add-r_leads_customer_company-2025-07-29" author="hua.liu">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_leads_customer_company"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE `r_leads_customer_company` (
+                                                       `id` bigint NOT NULL AUTO_INCREMENT,
+                                                       `crm_leads_id` bigint NOT NULL DEFAULT '0' COMMENT '调用crm创建leads的id',
+                                                       `crm_customer_id` bigint NOT NULL COMMENT 'leads 转customer的id',
+                                                       `crm_customer_code` varchar(64) DEFAULT NULL COMMENT 'leads 转customer的code',
+                                                       `crm_leads_customer_status` tinyint NOT NULL DEFAULT '1' COMMENT '转换状态1 初始创建leads， 2 leads转customer完成',
+                                                       `central_company_code` varchar(64) DEFAULT NULL COMMENT '注册账号company_code',
+                                                       `central_lead_company_id` bigint DEFAULT NULL COMMENT '注册账号返回leadCompanyId',
+                                                       `central_manager_id` bigint DEFAULT NULL COMMENT '注册账号时返回',
+                                                       `response_msg` varchar(512) DEFAULT NULL COMMENT '转换存储message',
+                                                       `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '删除标志 0未删除 1已删除',
+                                                       `create_time` datetime NOT NULL,
+                                                       `update_time` datetime NOT NULL,
+                                                       PRIMARY KEY (`id`),
+                                                       KEY `idx_company_code` (`central_company_code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='lead customer company 映射关系';
+        </sql>
+    </changeSet>
+    <changeSet id="r_leads_customer_company_company_id-2025-07-29" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_leads_customer_company"/>
+            <not>
+                <columnExists tableName="r_leads_customer_company" columnName="central_company_id"/>
+            </not>
+        </preConditions>
+        <sql>
+            alter table r_leads_customer_company
+                add central_company_id bigint null comment '注册时返回companyId' after central_manager_id;
+
+            create index idx_company_id
+                on r_leads_customer_company (central_company_id);
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_leads_customer_company_origin-2025-07-30" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_leads_customer_company"/>
+            <not>
+                <columnExists tableName="r_leads_customer_company" columnName="origin"/>
+            </not>
+        </preConditions>
+        <sql>
+            alter table r_leads_customer_company
+                add origin tinyint not null comment '来源 1注册时 2添加卡是' after response_msg;
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job-alter-url_code-2025-08-05" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="url_code"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify url_code varchar(512) not null comment 'url中显示的字符用-连接';
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="r_candidate_job-ddl-2025-08-05" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="job_country_id" type="bigint" remarks="职位国家id" afterColumn="camera_recording_url">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_state_id" type="bigint" remarks="职位省id" afterColumn="job_country_id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_city_id" type="bigint" remarks="职位市id" afterColumn="job_state_id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_country_name" type="varchar(255)" remarks="职位国家" afterColumn="job_city_id">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_state_name" type="varchar(255)" remarks="职位省" afterColumn="job_country_name">
+                <constraints nullable="true"/>
+            </column>
+            <column name="job_city_name" type="varchar(255)" remarks="职位市" afterColumn="job_state_name">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="r_bg_data-create" author="liuyabin">
+        <preConditions>
+            <not>
+                <tableExists tableName="r_bg_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_bg_data">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="candidate_job_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidate_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidate_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="varchar(50)"/>
+            <column name="email" type="varchar(100)" remarks="候选人邮箱">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_title" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_date" type="DATETIME" remarks="申请岗位日期">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bg_status" type="tinyint" remarks="背景调查状态:0--pending,1--completed,2--failed" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bg_date" type="datetime" remarks="进行背景调查的日期">
+                <constraints nullable="false"/>
+            </column>
+            <column name="criminal_record" type="tinyint" remarks="犯罪记录 0--Clear,1--Flagged" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employment_history_verified" type="bool" remarks="就业经历是否验证" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="edu_verified" type="bool" defaultValue="false" remarks="教育经历是否核实">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_url" type="varchar(1000)" remarks="背调报告结果报告pdf链接"/>
+            <column name="feedback_summary" type="varchar(2000)" remarks="feedback summary"/>
+            <column name="user_access_code" type="varchar(200)" remarks="背调系统里生成的唯一用户code">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_stage" type="varchar(20)" remarks="背调报告生成状态"/>
+            <column name="expires" type="datetime" remarks="报告失效时间"/>
+        </createTable>
+        <modifySql>
+            <append value="ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="r_candidate_ddl_20250804_002" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate"/>
+        </preConditions>
+        <addColumn tableName="r_candidate">
+            <column name="first_name" type="varchar(100)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(100)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="r_bg_data-ddl-20250804" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_bg_data"/>
+            <columnExists tableName="r_bg_data" columnName="criminal_record"/>
+        </preConditions>
+        <modifyDataType tableName="r_bg_data" columnName="criminal_record" newDataType="tinyint"/>
+        <modifyDataType tableName="r_bg_data" columnName="employment_history_verified" newDataType="tinyint"/>
+        <modifyDataType tableName="r_bg_data" columnName="edu_verified" newDataType="tinyint"/>
+        <setColumnRemarks tableName="r_bg_data" columnName="criminal_record" columnDataType="tinyint" remarks="犯罪记录 0--Clear,1--Flagged"/>
+        <setColumnRemarks tableName="r_bg_data" columnName="employment_history_verified" columnDataType="tinyint" remarks="就业经历是否验证"/>
+        <setColumnRemarks tableName="r_bg_data" columnName="edu_verified" columnDataType="tinyint" remarks="教育经历是否核实"/>
+    </changeSet>
+
+    <changeSet id="r_job-ddl_202508060_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+        </preConditions>
+        <addColumn tableName="r_job">
+            <column name="enable_written_test" type="boolean" defaultValue="false" remarks="是否开启笔试">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_candidate-ddl-20250807" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_candidate"/>
+            <columnExists tableName="r_candidate" columnName="phone_number"/>
+            <columnExists tableName="r_candidate" columnName="password"/>
+            <columnExists tableName="r_candidate" columnName="candidate_id"/>
+        </preConditions>
+        <sql>
+            alter table r_candidate
+                alter column phone_number set default '';
+
+            alter table r_candidate
+                alter column password set default '';
+
+            create index idx_candidate_id
+                on r_candidate (candidate_id);
+        </sql>
+    </changeSet>
+    <changeSet id="r_job-ddl-20250815" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <not>
+                <columnExists tableName="r_job" columnName="interview_length"/>
+            </not>
+        </preConditions>
+        <sql>
+            alter table r_job
+                add interview_length int not null comment '面试时长 单位分钟';
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="r_points_operation_log-ddl_20250815_001" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+        </preConditions>
+        <addColumn tableName="r_points_operation_log">
+            <column name="pricing_model"  type="tinyint(1)" defaultValue="0" remarks="计费模式(0:Minute Based,1:Token Based)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_points_operation_log-ddl_20250818_001" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+        </preConditions>
+        <addColumn tableName="r_points_operation_log">
+            <column name="duration_seconds"  type="int"  remarks="面试时长秒数">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_points_operation_log-ddl-20250815_002" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+            <columnExists tableName="r_points_operation_log" columnName="remark"/>
+
+        </preConditions>
+        <sql>
+            ALTER TABLE r_points_operation_log MODIFY remark VARCHAR(1000);
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_points_operation_log-ddl-20250818_002" author="liyunlong">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+            <not>
+                <columnExists tableName="r_points_operation_log" columnName="duration_minutes"/>
+            </not>
+            <not>
+                <columnExists tableName="r_points_operation_log" columnName="consumed_tokens"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_points_operation_log">
+            <column name="duration_minutes" type="int" remarks="面试时长分钟数">
+                <constraints nullable="true"/>
+            </column>
+            <column name="consumed_tokens" type="int" remarks="消耗的token数">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_job-ddl-20250820" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="create_time"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_job-ddl-20250821" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="interview_length"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                alter column interview_length set default 30;
+        </sql>
+    </changeSet>
+    <changeSet id="r_job-ddl-20250821-01" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="interview_length"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                alter column interview_length set default 10;
+        </sql>
+    </changeSet>
+
+    <!-- XML Feed Configuration Table -->
+    <changeSet id="r_xml_feed_config-add-20250826-01" author="liyunlong">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="r_xml_feed_config"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_xml_feed_config" remarks="XML Feed配置表">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="主键ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_code" type="VARCHAR(50)" remarks="公司代码">
+                <constraints nullable="false"/>
+            </column>
+            <column name="platform_type" type="TINYINT" remarks="平台类型：1-LinkedIn, 2-Indeed">
+                <constraints nullable="false"/>
+            </column>
+            <column name="feed_url" type="VARCHAR(200)" remarks="XML Feed URL地址">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_email" type="VARCHAR(100)" remarks="Indeed专用账户邮箱">
+                <constraints nullable="true"/>
+            </column>
+            <column name="update_interval_hours" type="TINYINT" remarks="自动更新间隔（小时），范围1-24">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME" remarks="最后更新时间">
+                <constraints nullable="true"/>
+            </column>
+            <column name="next_update_time" type="DATETIME" remarks="下次更新时间">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_time" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP" remarks="创建时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" remarks="修改时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by" type="BIGINT" remarks="创建人ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="update_by" type="BIGINT" remarks="修改人ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false" remarks="是否删除：false-否，true-是">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <!-- Create indexes for r_xml_feed_config -->
+        <createIndex indexName="idx_xml_feed_config_company_platform" tableName="r_xml_feed_config" unique="true">
+            <column name="company_code"/>
+            <column name="platform_type"/>
+            <column name="deleted"/>
+        </createIndex>
+        <createIndex indexName="idx_xml_feed_config_next_update" tableName="r_xml_feed_config">
+            <column name="next_update_time"/>
+            <column name="deleted"/>
+        </createIndex>
+        <createIndex indexName="idx_xml_feed_config_account_email" tableName="r_xml_feed_config">
+            <column name="account_email"/>
+            <column name="platform_type"/>
+            <column name="deleted"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- XML Feed Update Log Table -->
+    <changeSet id="r_xml_feed_update_log-add-20250826-01" author="liyunlong">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="r_xml_feed_update_log"/>
+            </not>
+        </preConditions>
+        <createTable tableName="r_xml_feed_update_log" remarks="XML Feed更新日志表">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="主键ID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="feed_config_id" type="BIGINT" remarks="Feed配置ID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_type" type="TINYINT" remarks="更新类型：1-手动更新，2-自动更新">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_status" type="TINYINT" remarks="更新状态：1-成功，2-失败">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_count" type="INT" remarks="更新的职位数量">
+                <constraints nullable="true"/>
+            </column>
+            <column name="error_message" type="TEXT" remarks="错误信息">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operator_id" type="BIGINT" remarks="操作人ID">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_time" type="DATETIME" remarks="开始时间">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_time" type="DATETIME" remarks="结束时间">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        
+        <!-- Create indexes for r_xml_feed_update_log -->
+        <createIndex indexName="idx_xml_feed_log_config_id" tableName="r_xml_feed_update_log">
+            <column name="feed_config_id"/>
+            <column name="start_time"/>
+        </createIndex>
+        <createIndex indexName="idx_xml_feed_log_status_time" tableName="r_xml_feed_update_log">
+            <column name="update_status"/>
+            <column name="start_time"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Add guide_url field to r_xml_feed_config table -->
+    <changeSet id="add-guide-url-to-xml-feed-config" author="liyunlong">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_xml_feed_config"/>
+            <not>
+                <columnExists tableName="r_xml_feed_config" columnName="guide_url"/>
+            </not>
+        </preConditions>
+        
+        <addColumn tableName="r_xml_feed_config">
+            <column name="guide_url" type="VARCHAR(300)" remarks="平台指导文档URL">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_job-location_id-allow-null-1" author="hua.liu">
+        <preConditions>
+            <tableExists tableName="r_job"/>
+            <columnExists tableName="r_job" columnName="location_id"/>
+        </preConditions>
+        <sql>
+            alter table r_job
+                modify location_id int null comment '位置Id';
+        </sql>
+    </changeSet>
+
+    <!-- RP-194: Add reapply_invited field to r_candidate_job table -->
+    <changeSet id="r_candidate_job-add-reapply-invited-rp194" author="system">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_candidate_job"/>
+            <not>
+                <columnExists tableName="r_candidate_job" columnName="reapply_invited"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="r_candidate_job">
+            <column name="reapply_invited" type="TINYINT" defaultValue="0" remarks="是否被邀请重新申请(0:未邀请,1:已邀请)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Create index for performance optimization -->
+        <createIndex indexName="idx_candidate_job_reapply_invited" tableName="r_candidate_job">
+            <column name="candidate_id"/>
+            <column name="job_id"/>
+            <column name="reapply_invited"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="r_candidate_job_ddl_20250915_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_candidate_job"/>
+        </preConditions>
+        <addColumn tableName="r_candidate_job">
+            <column name="interview_url" type="text" remarks="面试链接"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_ai_vetted_result_ddl_20250918_001" author="guoyarong">
+        <preConditions>
+            <tableExists tableName="r_ai_vetted_result"/>
+        </preConditions>
+        <addColumn tableName="r_ai_vetted_result">
+            <column name="interview_report_url" type="text" remarks="面试报告链接"/>
+        </addColumn>
+    </changeSet>
+
+    <!-- RP-305: Add interview type fields for audio interview points deduction -->
+    <changeSet id="r_points_operation_log_ddl_20251015001" author="yunlong-li">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_points_operation_log"/>
+            <not>
+                <columnExists tableName="r_points_operation_log" columnName="freeze_interview_type"/>
+            </not>
+        </preConditions>
+
+        <!-- Add interview type fields to r_points_operation_log table -->
+        <addColumn tableName="r_points_operation_log">
+            <column name="freeze_interview_type" type="tinyint" defaultValue="0" remarks="freeze interview type(0:video,1:audio)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="actual_interview_type" type="tinyint" defaultValue="0" remarks="actual interview type(0:video,1:audio)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_job_ddl_20251015001" author="yunlong-li">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_job"/>
+            <not>
+                <columnExists tableName="r_job" columnName="interview_type"/>
+            </not>
+        </preConditions>
+
+        <!-- Add interview type field to r_job table -->
+        <addColumn tableName="r_job">
+            <column name="interview_type" type="tinyint" defaultValue="0" remarks="interview type(0:video,1:audio)" afterColumn="interview_length">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_ai_vetted_result_ddl_20251023001" author="yunlong-li">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="r_ai_vetted_result"/>
+            <not>
+                <columnExists tableName="r_ai_vetted_result" columnName="interview_type"/>
+            </not>
+        </preConditions>
+
+        <!-- Add interview type field to r_job table -->
+        <addColumn tableName="r_ai_vetted_result">
+            <column name="interview_type" type="tinyint" defaultValue="0" remarks="interview type(0:video,1:audio)" afterColumn="candidate_job_id">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="r_points_operation_log_ddl_20251024001" author="yunlong-li">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+            <columnExists tableName="r_points_operation_log" columnName="freeze_interview_type"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE `r_points_operation_log`
+            MODIFY COLUMN `freeze_interview_type` TINYINT NOT NULL DEFAULT 0 COMMENT 'freeze interview type(0:video,1:audio)',
+            MODIFY COLUMN `actual_interview_type` TINYINT NULL COMMENT 'actual interview type(0:video,1:audio)';
+        </sql>
+    </changeSet>
+
+
+
+
+
+
+    <changeSet id="r_ai_vetted_result_ddl_20250929_001" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_ai_vetted_result"/>
+            <not>
+                <columnExists tableName="r_ai_vetted_result" columnName="data_source"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_ai_vetted_result">
+            <column name="data_source" type="int" defaultValue="0"  remarks="数据来源(0:recruit,1菲律宾)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_ai_vetted_result_ddl_20250929_002" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_ai_vetted_result"/>
+            <columnExists tableName="r_ai_vetted_result" columnName="overall_skill_assessment"/>
+        </preConditions>
+        <sql>
+            alter table r_ai_vetted_result MODIFY overall_skill_assessment TEXT COMMENT '评价';
+            alter table r_ai_vetted_result_skill MODIFY skill_assessment TEXT COMMENT '评价';
+            ALTER TABLE r_ai_vetted_result_skill MODIFY skill_score tinyint NULL COMMENT '技能评分';
+        </sql>
+    </changeSet>
+
+    <changeSet id="r_countries_ddl_20251113_001" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_countries"/>
+            <not>
+                <columnExists tableName="r_countries" columnName="chinese_name"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_countries">
+            <column name="chinese_name" type="VARCHAR(100)" remarks="中文名称" afterColumn="name"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_states_ddl_20251113_001" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_states"/>
+            <not>
+                <columnExists tableName="r_states" columnName="chinese_name"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_states">
+            <column name="chinese_name" type="VARCHAR(100)" remarks="中文名称" afterColumn="name"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_cities_ddl_20251113_001" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_cities"/>
+            <not>
+                <columnExists tableName="r_cities" columnName="chinese_name"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_cities">
+            <column name="chinese_name" type="VARCHAR(100)" remarks="中文名称" afterColumn="name"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="r_points_operation_log_ddl_20251217_001" author="yunlong.li">
+        <preConditions>
+            <tableExists tableName="r_points_operation_log"/>
+            <not>
+                <columnExists tableName="r_points_operation_log" columnName="oper_user_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="r_points_operation_log">
+            <column name="oper_user_id" type="bigint" remarks="操作人员" afterColumn="user_id"/>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

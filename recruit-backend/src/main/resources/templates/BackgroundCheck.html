@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Background Check Request</title>
+  <style>
+    /* 简单样式美化，可根据实际需求扩展 */
+    .container {
+      width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+    }
+    .highlight {
+      background-color: #ffe169;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    .btn-container {
+      text-align: center; /* 按钮容器居中对齐 */
+      margin-top: 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <p class="header" >Item Recruit</p>
+  <h1>
+    <span class="highlight">Background</span>
+    <span class="highlight">Check</span>
+    Request
+  </h1>
+  <p>
+    As part of the next steps in your application,
+    a <span class="highlight">background check</span> has been requested.
+    Please click the button below to start the process.
+  </p>
+  <div class="btn-container">
+    <a class="btn" th:href="'https://verify.authenticating.com/?token=' + ${uuid}" href="#">Start Background Check</a>
+  </div>
+
+  <hr>
+  <p class="footer" style="font-size: 12px; color: #999;">
+    &copy;2025 Item Recruit</span><br>
+    6800 Valley View St, Buena Park, CA 90620. United States</span><br>
+    <br>
+    All rights reserved.
+  </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="job-approval-001" author="system">
+        <comment>Add job approval fields to r_job table</comment>
+        
+        <addColumn tableName="r_job">
+            <column name="submitted_for_approval_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="approved_by" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="denied_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="denied_by" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="job-approval-002" author="system">
+        <comment>Create r_job_approval_settings table for company-level approval settings</comment>
+        
+        <createTable tableName="r_job_approval_settings">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_code" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="approval_required" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_notifications" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="admin_email" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by_id" type="BIGINT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+            <column name="update_by_id" type="BIGINT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        
+        <createIndex tableName="r_job_approval_settings" indexName="idx_job_approval_settings_company_code">
+            <column name="company_code"/>
+        </createIndex>
+        
+        <addUniqueConstraint tableName="r_job_approval_settings" 
+                            constraintName="uk_job_approval_settings_company_code" 
+                            columnNames="company_code"/>
+    </changeSet>
+
+    <changeSet id="job-approval-003" author="system">
+        <comment>Create r_job_approval_email_retry table for email retry mechanism</comment>
+        
+        <createTable tableName="r_job_approval_email_retry">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="job_id" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="template_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="variables" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="admin_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retry_count" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_failure_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_retry_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="completed_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by_id" type="BIGINT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+            <column name="update_by_id" type="BIGINT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        
+        <createIndex tableName="r_job_approval_email_retry" indexName="idx_job_approval_email_retry_status">
+            <column name="status"/>
+        </createIndex>
+        
+        <createIndex tableName="r_job_approval_email_retry" indexName="idx_job_approval_email_retry_job_id">
+            <column name="job_id"/>
+        </createIndex>
+        
+        <createIndex tableName="r_job_approval_email_retry" indexName="idx_job_approval_email_retry_last_retry_time">
+            <column name="last_retry_time"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="job-approval-004" author="system">
+        <comment>Create r_job_audit_history table</comment>
+        
+        <createTable tableName="r_job_audit_history">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="job_id" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_status" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="new_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createIndex tableName="r_job_audit_history" indexName="idx_job_id">
+            <column name="job_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

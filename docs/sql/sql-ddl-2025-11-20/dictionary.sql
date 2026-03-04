@@ -1,0 +1,1 @@
+UPDATE r_dictionary SET `code` = 'NIO' WHERE type  =  'currency_type' AND `value` = 'C$'
